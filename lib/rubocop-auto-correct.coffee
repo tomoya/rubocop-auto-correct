@@ -13,8 +13,9 @@ module.exports =
        @run(event.currentTarget.getModel())
 
   autoCorrect: (filePath)  ->
-    command = 'rubocop'
+    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     args = ['-a', filePath]
+    console.log("#{command} -a #{filePath}")
     process = new BufferedProcess({command, args})
     process
 
