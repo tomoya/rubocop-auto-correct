@@ -24,3 +24,9 @@ Apply RuboCop auto-crrect in Atom
 'atom-text-editor[data-grammar~="ruby"]':
   'alt-r': 'rubocop-auto-correct:current-file'
 ```
+
+## TODO
+
+* apply buffer (not file)
+* auto run
+* rubocop path setting in config
