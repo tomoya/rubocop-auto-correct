@@ -18,7 +18,18 @@ Apply RuboCop auto-correct in Atom
 2. Select `Rubocop Auto-correct` in Context menu
 3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menubar
 
-## keymap example
+
+## Setting
+
+### Rubocop command path
+
+It is possible to set from the Packages Settings.
+
+default value is 'rubocop'
+
+### keymap example
+
+Package doesn't provide keymap. If you want to use keybind, please setup `~/.atom/keymap.cson`
 
 ```coffee
 'atom-text-editor[data-grammar~="ruby"]':
