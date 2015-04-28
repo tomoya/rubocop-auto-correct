@@ -40,5 +40,9 @@ Package doesn't provide keymap. If you want to use keybind, please setup `~/.ato
 
 * apply buffer (not file)
 * auto run
-* rubocop path setting in config
 * add spec
+* error handle
+
+### Done
+
+* rubocop path setting in config
