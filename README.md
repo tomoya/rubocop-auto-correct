@@ -15,8 +15,8 @@ Apply RuboCop auto-crrect in Atom
 ## Usage
 
 1. Run `Rubocop Auto Correct: Current File` in Command Palette
-2. Context menu `Rubocop Auto-correct`
-3. Packages -> Rubocop Auto-correct -> Current File in menubar
+2. Select `Rubocop Auto-correct` in Context menu
+3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menubar
 
 ## keymap example
 
@@ -30,3 +30,4 @@ Apply RuboCop auto-crrect in Atom
 * apply buffer (not file)
 * auto run
 * rubocop path setting in config
+* add spec
