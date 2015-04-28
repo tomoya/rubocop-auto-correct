@@ -6,7 +6,7 @@
   "activationCommands": {
     "atom-workspace": "rubocop-auto-correct:current-file"
   },
-  "repository": "https://github.com/atom/rubocop-auto-correct",
+  "repository": "https://github.com/tomoya/rubocop-auto-correct",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
