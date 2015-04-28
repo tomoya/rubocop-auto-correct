@@ -2,7 +2,7 @@
 
 Apply RuboCop auto-crrect in Atom
 
-![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/7368984/a1853f96-ede8-11e4-8516-1997bc061ca5.gif)
+![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/7369380/abc3a688-edec-11e4-9a44-58a1604c454d.gif)
 
 ## Require
 
