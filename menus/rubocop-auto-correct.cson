@@ -1,0 +1,22 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Rubocop Auto-correct'
+      'command': 'rubocop-auto-correct:current-file'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Rubocop Auto-correct'
+      'submenu': [
+        {
+          'label': 'Current File'
+          'command': 'rubocop-auto-correct:current-file'
+        }
+      ]
+    ]
+  }
+]
