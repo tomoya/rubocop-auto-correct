@@ -1,6 +1,6 @@
 # rubocop-auto-correct package
 
-Apply RuboCop auto-correct in Atom
+Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
 
 ![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/7369380/abc3a688-edec-11e4-9a44-58a1604c454d.gif)
 
@@ -18,8 +18,15 @@ Apply RuboCop auto-correct in Atom
 2. Select `Rubocop Auto-correct` in Context menu
 3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menubar
 
-
 ## Setting
+
+![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/7857284/35de545a-056a-11e5-8d56-18e324e040ca.png)
+
+### Auto run
+
+When checked, Automatically run Rubocop auto correct.
+
+default value is 'false'
 
 ### Rubocop command path
 
@@ -38,11 +45,11 @@ Package doesn't provide keymap. If you want to use keybind, please setup `~/.ato
 
 ## TODO
 
-* apply buffer (not file)
-* auto run
-* add spec
-* error handle
+* [ ] apply buffer (not file)
+* [ ] add spec
+* [ ] error handle
 
 ### Done
 
-* rubocop path setting in config
+* [x] rubocop path setting in config
+* [x] auto run
