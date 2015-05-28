@@ -16,5 +16,7 @@
     "rubocop",
     "refactoring"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "which": "^1.1.1"
+  }
 }
