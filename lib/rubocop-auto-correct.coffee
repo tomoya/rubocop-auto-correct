@@ -1,4 +1,5 @@
 {BufferedProcess} = require 'atom'
+path = require 'path'
 
 module.exports =
   config:
@@ -13,10 +14,11 @@ module.exports =
        @run(event.currentTarget.getModel())
 
   autoCorrect: (filePath)  ->
+    basename = path.basename(filePath)
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     args = ['-a', filePath]
-    console.log("#{command} -a #{filePath}")
-    process = new BufferedProcess({command, args})
+    exit = (code) -> atom.notifications.addSuccess("#{command} -a #{basename}")
+    process = new BufferedProcess({command, args, exit})
     process
 
   run: (editor) ->
