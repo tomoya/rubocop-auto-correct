@@ -1,7 +1,7 @@
 {
   "name": "rubocop-auto-correct",
   "main": "./lib/main",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Apply RuboCop auto-correct in Atom",
   "activationCommands": {
     "atom-workspace": "rubocop-auto-correct:current-file"
