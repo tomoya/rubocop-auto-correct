@@ -42,7 +42,7 @@ class RubocopAutoCorrect
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     args = ['-a', filePath]
     stdout = (output) ->
-      unless output.match("no offenses detected")
+      if output.match("corrected")
         atom.notifications.addSuccess(output)
     stderr = (output) ->
       atom.notifications.addError(output)
