@@ -14,6 +14,9 @@ class RubocopAutoCorrect
         if editor = atom.workspace.getActiveTextEditor()
           @run(editor)
 
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
+
   destroy: ->
     @subscriptions.dispose()
 
@@ -52,3 +55,9 @@ class RubocopAutoCorrect
     if editor.isModified()
       editor.save()
     @autoCorrect(editor.getPath())
+
+  toggleAutoRun: ->
+    if atom.config.get('rubocop-auto-correct.autoRun')
+      atom.config.set('rubocop-auto-correct.autoRun', false)
+    else
+      atom.config.set('rubocop-auto-correct.autoRun', true)
