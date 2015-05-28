@@ -38,12 +38,12 @@ class RubocopAutoCorrect
     basename = path.basename(filePath)
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     args = ['-a', filePath]
-    exit = (code) ->
-       if (code == 0)
-         atom.notifications.addSuccess("#{command} -a #{basename}")
-       else
-         atom.notifications.addError("Failer #{command} -a #{basename}")
-    process = new BufferedProcess({command, args, exit})
+    stdout = (output) ->
+      unless output.match("no offenses detected")
+        atom.notifications.addSuccess(output)
+    stderr = (output) ->
+      atom.notifications.addError(output)
+    process = new BufferedProcess({command, args, stdout, stderr})
     process
 
   run: (editor) ->
