@@ -59,5 +59,7 @@ class RubocopAutoCorrect
   toggleAutoRun: ->
     if atom.config.get('rubocop-auto-correct.autoRun')
       atom.config.set('rubocop-auto-correct.autoRun', false)
+      atom.notifications.addSuccess("Trun OFF, Auto Run")
     else
       atom.config.set('rubocop-auto-correct.autoRun', true)
+      atom.notifications.addSuccess("Trun ON, Auto Run")
