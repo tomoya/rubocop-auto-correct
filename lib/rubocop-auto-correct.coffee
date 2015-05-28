@@ -50,7 +50,7 @@ class RubocopAutoCorrect
     process
 
   run: (editor) ->
-    if editor.getGrammar().scopeName != "source.ruby"
+    unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
     if editor.isModified()
       editor.save()
