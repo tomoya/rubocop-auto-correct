@@ -8,10 +8,7 @@ class RubocopAutoCorrect
     @subscriptions.add atom.commands.add 'atom-workspace',
       'rubocop-auto-correct:current-file': =>
         if editor = atom.workspace.getActiveTextEditor()
-          if editor.getGrammar().scopeName == "source.ruby"
-            @run(editor)
-          else
-            atom.notifications.addError("Only use source.ruby")
+          @run(editor)
 
   destroy: ->
     @subscriptions.dispose()
@@ -29,6 +26,8 @@ class RubocopAutoCorrect
     process
 
   run: (editor) ->
+    if editor.getGrammar().scopeName != "source.ruby"
+      return atom.notifications.addError("Only use source.ruby")
     if editor.isModified()
       editor.save()
     @autoCorrect(editor.getPath())
