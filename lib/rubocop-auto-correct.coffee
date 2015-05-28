@@ -6,7 +6,7 @@ class RubocopAutoCorrect
   constructor: ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
-      if editor.getGrammar().scopeName == "source.ruby"
+      if editor.getGrammar().scopeName.match("ruby")
         @handleEvents(editor)
 
     @subscriptions.add atom.commands.add 'atom-workspace',
