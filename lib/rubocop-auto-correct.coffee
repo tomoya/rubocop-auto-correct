@@ -1,17 +1,17 @@
-{BufferedProcess} = require 'atom'
+{BufferedProcess, CompositeDisposable} = require 'atom'
 path = require 'path'
 
 module.exports =
-  config:
-    rubocopCommandPath:
-      description: 'If command doesnot work, please input rubocop full path. example: /Users/<username>/.rbenv/shims/rubocop)'
-      type: 'string'
-      default: 'rubocop'
+class RubocopAutoCorrect
+  constructor: ->
+    @subscriptions = new CompositeDisposable
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'rubocop-auto-correct:current-file': =>
+        if editor = atom.workspace.getActiveTextEditor()
+          @run(editor)
 
-  activate: ->
-    atom.commands.add 'atom-text-editor',
-     'rubocop-auto-correct:current-file': (event) =>
-       @run(event.currentTarget.getModel())
+  destroy: ->
+    @subscriptions.dispose()
 
   autoCorrect: (filePath)  ->
     basename = path.basename(filePath)
