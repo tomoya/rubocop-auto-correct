@@ -21,7 +21,8 @@ class RubocopAutoCorrect
     buffer = editor.getBuffer()
     bufferSavedSubscription = buffer.onDidSave =>
       buffer.transact =>
-        @run(editor)
+        if atom.config.get('rubocop-auto-correct.autoRun')
+          @run(editor)
     editorDestroyedSubscription = editor.onDidDestroy ->
       bufferSavedSubscription.dispose()
       editorDestroyedSubscription.dispose()
