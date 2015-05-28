@@ -5,6 +5,10 @@ module.exports =
 class RubocopAutoCorrect
   constructor: ->
     @subscriptions = new CompositeDisposable
+    @subscriptions.add atom.workspace.observeTextEditors (editor) =>
+      if editor.getGrammar().scopeName == "source.ruby"
+        @handleEvents(editor)
+
     @subscriptions.add atom.commands.add 'atom-workspace',
       'rubocop-auto-correct:current-file': =>
         if editor = atom.workspace.getActiveTextEditor()
@@ -12,6 +16,22 @@ class RubocopAutoCorrect
 
   destroy: ->
     @subscriptions.dispose()
+
+  handleEvents: (editor) ->
+    buffer = editor.getBuffer()
+    bufferSavedSubscription = buffer.onDidSave =>
+      buffer.transact =>
+        @run(editor)
+    editorDestroyedSubscription = editor.onDidDestroy ->
+      bufferSavedSubscription.dispose()
+      editorDestroyedSubscription.dispose()
+    bufferDestroyedSubscription = buffer.onDidDestroy ->
+      bufferDestroyedSubscription.dispose()
+      bufferSavedSubscription.dispose()
+
+    @subscriptions.add(bufferSavedSubscription)
+    @subscriptions.add(editorDestroyedSubscription)
+    @subscriptions.add(bufferDestroyedSubscription)
 
   autoCorrect: (filePath)  ->
     basename = path.basename(filePath)
