@@ -49,9 +49,9 @@ Package doesn't provide keymap. If you want to use keybind, please setup `~/.ato
 
 * [ ] apply buffer (not file)
 * [ ] add spec
-* [ ] error handle
 
 ### Done
 
 * [x] rubocop path setting in config
 * [x] auto run
+* [x] error handle
