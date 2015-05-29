@@ -2,7 +2,7 @@
 
 Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
 
-![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/7369380/abc3a688-edec-11e4-9a44-58a1604c454d.gif)
+![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/7874437/9f40b20a-05ea-11e5-8822-229c8f79abe4.gif)
 
 ## Require
 
