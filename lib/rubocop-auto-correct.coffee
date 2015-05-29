@@ -1,5 +1,6 @@
 {BufferedProcess, CompositeDisposable} = require 'atom'
 path = require 'path'
+which = require 'which'
 
 module.exports =
 class RubocopAutoCorrect
@@ -46,8 +47,19 @@ class RubocopAutoCorrect
         atom.notifications.addSuccess(output)
     stderr = (output) ->
       atom.notifications.addError(output)
-    process = new BufferedProcess({command, args, stdout, stderr})
-    process
+
+    which command, (err) ->
+      if (err)
+        return atom.notifications.addFatalError(
+          "Rubocop command is not found.",
+          { detail: '''
+          When you don't install rubocop yet, Run `gem install rubocop` first.\n
+          If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+          ''' }
+        )
+
+      process = new BufferedProcess({command, args, stdout, stderr})
+      process
 
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
