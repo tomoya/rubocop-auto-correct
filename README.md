@@ -18,40 +18,46 @@ Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
 2. Select `Rubocop Auto-correct` in Context menu
 3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menubar
 
-## Setting
+## keymap example
 
-![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/7906495/31e36f0c-0867-11e5-8184-0bed41927757.png)
+This package doesn't provide default keymap.
 
-### Auto run
-
-When checked, Automatically run Rubocop auto correct.
-
-default value is 'false'
-
-When you run `Rubocop Auto Correct: Toggle Auto Run` command, can change at any time.
-
-### Notification
-
-When checked off, disable after corrected notification
-
-default value is 'true'
-
-When you run `Rubocop Auto Correct: Toggle Notification` command, can change at any time.
-
-### Rubocop command path
-
-It is possible to set from the Packages Settings.
-
-default value is 'rubocop'
-
-### keymap example
-
-Package doesn't provide keymap. If you want to use keybind, please setup `~/.atom/keymap.cson`
+If you want to use from keybind, please setup `~/.atom/keymap.cson`
 
 ```coffee
 'atom-text-editor[data-grammar~="ruby"]':
   'alt-r': 'rubocop-auto-correct:current-file'
 ```
+
+## Settings
+
+![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/7906495/31e36f0c-0867-11e5-8184-0bed41927757.png)
+
+### Auto Run
+
+When checked, Automatically run Rubocop auto correct.
+
+- default value is `false`
+
+When you run `Rubocop Auto Correct: Toggle Auto Run` command, can change at any time.
+
+### Notification
+
+When checked off, Disable after corrected notification.
+
+- default value is `true`
+
+When you run `Rubocop Auto Correct: Toggle Notification` command, can change at any time.
+
+### Rubocop Command Path
+
+When you don't install rubocop yet, Run `gem install rubocop` first.
+
+If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+
+For example `~/.rbenv/shims/rubocop`.
+
+- default value is `rubocop`
 
 ## TODO
 
