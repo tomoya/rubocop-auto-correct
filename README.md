@@ -56,10 +56,10 @@ Package doesn't provide keymap. If you want to use keybind, please setup `~/.ato
 ## TODO
 
 * [ ] apply buffer (not file)
-* [ ] add spec
 
 ### Done
 
 * [x] rubocop path setting in config
 * [x] auto run
 * [x] error handle
+* [x] add spec
