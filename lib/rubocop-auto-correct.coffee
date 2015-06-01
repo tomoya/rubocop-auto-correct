@@ -18,6 +18,9 @@ class RubocopAutoCorrect
     @subscriptions.add atom.commands.add 'atom-workspace',
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
 
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'rubocop-auto-correct:toggle-notification': => @toggleNotification()
+
   destroy: ->
     @subscriptions.dispose()
 
@@ -77,3 +80,11 @@ class RubocopAutoCorrect
     else
       atom.config.set('rubocop-auto-correct.autoRun', true)
       atom.notifications.addSuccess("Trun ON, Auto Run")
+
+  toggleNotification: ->
+    if atom.config.get('rubocop-auto-correct.notification')
+      atom.config.set('rubocop-auto-correct.notification', false)
+      atom.notifications.addSuccess("Trun OFF, Notification")
+    else
+      atom.config.set('rubocop-auto-correct.notification', true)
+      atom.notifications.addSuccess("Trun ON, Notification")
