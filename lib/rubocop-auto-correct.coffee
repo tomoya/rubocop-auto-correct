@@ -44,9 +44,11 @@ class RubocopAutoCorrect
     args = ['-a', filePath]
     stdout = (output) ->
       if output.match("corrected")
-        atom.notifications.addSuccess(output)
+        if atom.config.get('rubocop-auto-correct.notification')
+          atom.notifications.addSuccess(output)
     stderr = (output) ->
-      atom.notifications.addError(output)
+      if atom.config.get('rubocop-auto-correct.notification')
+        atom.notifications.addError(output)
 
     which command, (err) ->
       if (err)
