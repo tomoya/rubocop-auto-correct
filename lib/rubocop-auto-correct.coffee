@@ -1,5 +1,4 @@
 {BufferedProcess, CompositeDisposable} = require 'atom'
-path = require 'path'
 which = require 'which'
 
 module.exports =
@@ -17,6 +16,9 @@ class RubocopAutoCorrect
 
     @subscriptions.add atom.commands.add 'atom-workspace',
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
+
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'rubocop-auto-correct:toggle-notification': => @toggleNotification()
 
   destroy: ->
     @subscriptions.dispose()
@@ -38,17 +40,8 @@ class RubocopAutoCorrect
     @subscriptions.add(editorDestroyedSubscription)
     @subscriptions.add(bufferDestroyedSubscription)
 
-  autoCorrect: (filePath)  ->
-    basename = path.basename(filePath)
-    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-    args = ['-a', filePath]
-    stdout = (output) ->
-      if output.match("corrected")
-        atom.notifications.addSuccess(output)
-    stderr = (output) ->
-      atom.notifications.addError(output)
-
-    which command, (err) ->
+  autoCorrect: (options)  ->
+    which options.command, (err) ->
       if (err)
         return atom.notifications.addFatalError(
           "Rubocop command is not found.",
@@ -58,7 +51,7 @@ class RubocopAutoCorrect
           ''' }
         )
 
-      process = new BufferedProcess({command, args, stdout, stderr})
+      process = new BufferedProcess(options)
       process
 
   run: (editor) ->
@@ -66,7 +59,29 @@ class RubocopAutoCorrect
       return atom.notifications.addError("Only use source.ruby")
     if editor.isModified()
       editor.save()
-    @autoCorrect(editor.getPath())
+    @autoCorrect(@getOptions(editor.getPath()))
+
+  getOptions: (filePath) ->
+    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+    args = ['-a', filePath]
+    stdout = (output) ->
+      if output.match("corrected")
+        atom.notifications.addSuccess(output)
+    stderr = (output) ->
+      atom.notifications.addError(output)
+
+    unless atom.config.get('rubocop-auto-correct.notification')
+      return {
+        command: command,
+        args: args,
+      }
+
+    {
+      command: command,
+      args: args,
+      stdout: stdout,
+      stderr: stderr
+    }
 
   toggleAutoRun: ->
     if atom.config.get('rubocop-auto-correct.autoRun')
@@ -75,3 +90,11 @@ class RubocopAutoCorrect
     else
       atom.config.set('rubocop-auto-correct.autoRun', true)
       atom.notifications.addSuccess("Trun ON, Auto Run")
+
+  toggleNotification: ->
+    if atom.config.get('rubocop-auto-correct.notification')
+      atom.config.set('rubocop-auto-correct.notification', false)
+      atom.notifications.addSuccess("Trun OFF, Notification")
+    else
+      atom.config.set('rubocop-auto-correct.notification', true)
+      atom.notifications.addSuccess("Trun ON, Notification")

@@ -10,6 +10,10 @@ module.exports =
       description: 'When you save the buffer, Automatically run Rubocop auto correct'
       type: 'boolean'
       default: false
+    notification:
+      description: 'If you want to disable notification, Please remove the check'
+      type: 'boolean'
+      default: true
 
   activate: ->
     @rubocopAutoCorrect = new RubocopAutoCorrect()
