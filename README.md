@@ -20,7 +20,7 @@ Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
 
 ## Setting
 
-![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/7857284/35de545a-056a-11e5-8d56-18e324e040ca.png)
+![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/7906495/31e36f0c-0867-11e5-8184-0bed41927757.png)
 
 ### Auto run
 
@@ -29,6 +29,12 @@ When checked, Automatically run Rubocop auto correct.
 default value is 'false'
 
 When you run `Rubocop Auto Correct: Toggle Auto Run` command, can change at any time.
+
+### Notification
+
+When checked off, disable after corrected notification
+
+default value is 'true'
 
 ### Rubocop command path
 
