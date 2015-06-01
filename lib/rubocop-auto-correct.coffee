@@ -1,5 +1,4 @@
 {BufferedProcess, CompositeDisposable} = require 'atom'
-path = require 'path'
 which = require 'which'
 
 module.exports =
@@ -41,30 +40,8 @@ class RubocopAutoCorrect
     @subscriptions.add(editorDestroyedSubscription)
     @subscriptions.add(bufferDestroyedSubscription)
 
-  autoCorrect: (filePath)  ->
-    basename = path.basename(filePath)
-    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-    args = ['-a', filePath]
-    stdout = (output) ->
-      if output.match("corrected")
-        atom.notifications.addSuccess(output)
-    stderr = (output) ->
-        atom.notifications.addError(output)
-
-    options = {
-      command: command,
-      args: args,
-      stdout: stdout,
-      stderr: stderr
-    }
-
-    unless atom.config.get('rubocop-auto-correct.notification')
-      options = {
-        command: command,
-        args: args,
-      }
-
-    which command, (err) ->
+  autoCorrect: (options)  ->
+    which options.command, (err) ->
       if (err)
         return atom.notifications.addFatalError(
           "Rubocop command is not found.",
@@ -82,7 +59,29 @@ class RubocopAutoCorrect
       return atom.notifications.addError("Only use source.ruby")
     if editor.isModified()
       editor.save()
-    @autoCorrect(editor.getPath())
+    @autoCorrect(@getOptions(editor.getPath()))
+
+  getOptions: (filePath) ->
+    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+    args = ['-a', filePath]
+    stdout = (output) ->
+      if output.match("corrected")
+        atom.notifications.addSuccess(output)
+    stderr = (output) ->
+      atom.notifications.addError(output)
+
+    unless atom.config.get('rubocop-auto-correct.notification')
+      return {
+        command: command,
+        args: args,
+      }
+
+    {
+      command: command,
+      args: args,
+      stdout: stdout,
+      stderr: stderr
+    }
 
   toggleAutoRun: ->
     if atom.config.get('rubocop-auto-correct.autoRun')
