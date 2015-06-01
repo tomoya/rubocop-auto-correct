@@ -2,8 +2,9 @@
 
 Features:
 
-- Add notification config #5
-- Add `rubocop-auto-correct:toggle-notification` command
+- Can disable notification by config #5, #6
+  - Add notification config
+  - Add `rubocop-auto-correct:toggle-notification` command
 
 ## v0.6.1 (2015-05-29)
 
