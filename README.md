@@ -36,6 +36,8 @@ When checked off, disable after corrected notification
 
 default value is 'true'
 
+When you run `Rubocop Auto Correct: Toggle Notification` command, can change at any time.
+
 ### Rubocop command path
 
 It is possible to set from the Packages Settings.
