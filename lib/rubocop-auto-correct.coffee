@@ -47,11 +47,22 @@ class RubocopAutoCorrect
     args = ['-a', filePath]
     stdout = (output) ->
       if output.match("corrected")
-        if atom.config.get('rubocop-auto-correct.notification')
-          atom.notifications.addSuccess(output)
+        atom.notifications.addSuccess(output)
     stderr = (output) ->
-      if atom.config.get('rubocop-auto-correct.notification')
         atom.notifications.addError(output)
+
+    options = {
+      command: command,
+      args: args,
+      stdout: stdout,
+      stderr: stderr
+    }
+
+    unless atom.config.get('rubocop-auto-correct.notification')
+      options = {
+        command: command,
+        args: args,
+      }
 
     which command, (err) ->
       if (err)
@@ -63,7 +74,7 @@ class RubocopAutoCorrect
           ''' }
         )
 
-      process = new BufferedProcess({command, args, stdout, stderr})
+      process = new BufferedProcess(options)
       process
 
   run: (editor) ->
