@@ -13,11 +13,7 @@ class RubocopAutoCorrect
       'rubocop-auto-correct:current-file': =>
         if editor = atom.workspace.getActiveTextEditor()
           @run(editor)
-
-    @subscriptions.add atom.commands.add 'atom-workspace',
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
-
-    @subscriptions.add atom.commands.add 'atom-workspace',
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
 
   destroy: ->
@@ -29,16 +25,13 @@ class RubocopAutoCorrect
       buffer.transact =>
         if atom.config.get('rubocop-auto-correct.autoRun')
           @run(editor)
+
     editorDestroyedSubscription = editor.onDidDestroy ->
       bufferSavedSubscription.dispose()
       editorDestroyedSubscription.dispose()
-    bufferDestroyedSubscription = buffer.onDidDestroy ->
-      bufferDestroyedSubscription.dispose()
-      bufferSavedSubscription.dispose()
 
     @subscriptions.add(bufferSavedSubscription)
     @subscriptions.add(editorDestroyedSubscription)
-    @subscriptions.add(bufferDestroyedSubscription)
 
   autoCorrect: (options)  ->
     which options.command, (err) ->
