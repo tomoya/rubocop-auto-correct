@@ -7,7 +7,7 @@ module.exports =
       type: 'string'
       default: 'rubocop'
     autoRun:
-      description: 'When you save the buffer, Automatically run Rubocop auto correct'
+      description: 'When you save the buffer, Automatically run Rubocop auto correct, But, need to run manually once at window'
       type: 'boolean'
       default: false
     notification:

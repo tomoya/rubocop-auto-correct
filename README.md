@@ -35,7 +35,9 @@ If you want to use from keybind, please setup `~/.atom/keymap.cson`
 
 ### Auto Run
 
-When checked, Automatically run Rubocop auto correct.
+This package support auto run. When checked, Automatically run Rubocop auto correct. But, **It's to need activation**.
+
+Activation method is to run manually `Rubocop Auto Correct: Current File` Once at Atom window.
 
 - default value is `false`
 
