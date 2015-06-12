@@ -1,3 +1,9 @@
+## v0.7.1 (2015-06-13)
+
+Documentation:
+
+- Add notice about auto run
+
 ## v0.7.0 (2015-06-01)
 
 Features:
