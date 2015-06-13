@@ -75,15 +75,15 @@ class RubocopAutoCorrect
           ''' }
         )
 
-      processed = spawnSync(command, args, options)
+      rubocop = spawnSync(command, args, options)
 
-      if processed.stderr != ""
-        return atom.notifications.addError(processed.stderr)
+      if rubocop.stderr != ""
+        return atom.notifications.addError(rubocop.stderr)
 
-      if processed.stdout.match("corrected")
+      if rubocop.stdout.match("corrected")
         buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
         if atom.config.get('rubocop-auto-correct.notification')
-          atom.notifications.addSuccess(processed.stdout)
+          atom.notifications.addSuccess(rubocop.stdout)
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
