@@ -46,23 +46,23 @@ describe "RubocopAutoCorrect", ->
       buffer.setText("{ :atom => 'A hackable text editor for the 21st Century' }\n")
 
     it "manually run", ->
-      expect(buffer.getText()).toBe "{ :atom => 'A hackable text editor for the 21st Century' }\n"
       atom.commands.dispatch workspaceElement, 'rubocop-auto-correct:current-file'
 
       bufferChangedSpy = jasmine.createSpy()
       buffer.onDidChange(bufferChangedSpy)
-      waitsFor -> bufferChangedSpy.callCount > 0
+      waitsFor ->
+        bufferChangedSpy.callCount > 0
       runs ->
         expect(buffer.getText()).toBe "{ atom: 'A hackable text editor for the 21st Century' }\n"
 
     it "auto run", ->
-      expect(buffer.getText()).toBe "{ :atom => 'A hackable text editor for the 21st Century' }\n"
       atom.config.set('rubocop-auto-correct.autoRun', true)
       editor.save()
 
       bufferChangedSpy = jasmine.createSpy()
       buffer.onDidChange(bufferChangedSpy)
-      waitsFor -> bufferChangedSpy.callCount > 0
+      waitsFor ->
+        bufferChangedSpy.callCount > 0
       runs ->
         expect(buffer.getText()).toBe "{ atom: 'A hackable text editor for the 21st Century' }\n"
 
@@ -84,24 +84,8 @@ describe "RubocopAutoCorrect", ->
       @rubocopAutoCorrect.toggleNotification()
       expect(atom.config.get('rubocop-auto-correct').notification).toBe false
 
-  describe "when get options", ->
-    beforeEach ->
+  describe "when makeTempFile", ->
+    it "run makeTempFile", ->
       @rubocopAutoCorrect = new RubocopAutoCorrect
-
-    it 'should have only command and args options, When notification false', ->
-      atom.config.set('rubocop-auto-correct.notification', false)
-      editor = atom.workspace.getActiveTextEditor()
-      options = @rubocopAutoCorrect.getOptions(editor.getPath())
-      expect(Object.keys(options).length).toBe 2
-      expect(Object.keys(options)[0]).toBe "command"
-      expect(Object.keys(options)[1]).toBe "args"
-
-    it 'should have full options, When notification true', ->
-      atom.config.set('rubocop-auto-correct.notification', true)
-      editor = atom.workspace.getActiveTextEditor()
-      options = @rubocopAutoCorrect.getOptions(editor.getPath())
-      expect(Object.keys(options).length).toBe 4
-      expect(Object.keys(options)[0]).toBe "command"
-      expect(Object.keys(options)[1]).toBe "args"
-      expect(Object.keys(options)[2]).toBe "stdout"
-      expect(Object.keys(options)[3]).toBe "stderr"
+      tempFilePath = @rubocopAutoCorrect.makeTempFile("rubocop.rb")
+      expect(fs.isFileSync(tempFilePath)).toBe true
