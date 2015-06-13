@@ -105,3 +105,9 @@ describe "RubocopAutoCorrect", ->
       expect(Object.keys(options)[1]).toBe "args"
       expect(Object.keys(options)[2]).toBe "stdout"
       expect(Object.keys(options)[3]).toBe "stderr"
+
+  describe "when makeTempFile", ->
+    it "run makeTempFile", ->
+      @rubocopAutoCorrect = new RubocopAutoCorrect
+      tempFilePath = @rubocopAutoCorrect.makeTempFile("rubocop.rb")
+      expect(fs.isFileSync(tempFilePath)).toBe true

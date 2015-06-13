@@ -80,6 +80,12 @@ class RubocopAutoCorrect
       stderr: stderr
     }
 
+  makeTempFile: (filename) ->
+    directory = temp.mkdirSync()
+    filePath = path.join(directory, filename)
+    fs.writeFileSync(filePath, '')
+    filePath
+
   toggleAutoRun: ->
     if atom.config.get('rubocop-auto-correct.autoRun')
       atom.config.set('rubocop-auto-correct.autoRun', false)
