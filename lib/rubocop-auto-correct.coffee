@@ -37,11 +37,10 @@ class RubocopAutoCorrect
     @subscriptions.add(bufferSavedSubscription)
     @subscriptions.add(editorDestroyedSubscription)
 
-  autoCorrect: (editor)  ->
-    tempFilePath = @makeTempFile("rubocop.rb")
-    buffer = editor.getBuffer()
-    fs.writeFileSync(tempFilePath, buffer.getText())
+  autoCorrect: (buffer)  ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+    tempFilePath = @makeTempFile("rubocop.rb")
+    fs.writeFileSync(tempFilePath, buffer.getText())
     args = ['-a', tempFilePath]
     options = { encoding: 'utf-8', timeout: 5000 }
 
@@ -68,7 +67,7 @@ class RubocopAutoCorrect
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
-    @autoCorrect(editor)
+    @autoCorrect(editor.getBuffer())
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
