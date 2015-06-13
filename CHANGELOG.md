@@ -1,3 +1,11 @@
+## v0.8.0 (2015-06-13)
+
+Features:
+
+- Buffer apply
+
+If there is no fatal problems in this version, I will release the v1.0.0 after a few days.
+
 ## v0.7.1 (2015-06-13)
 
 Documentation:
