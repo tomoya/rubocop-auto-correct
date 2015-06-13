@@ -83,7 +83,11 @@ class RubocopAutoCorrect
       if rubocop.stdout.match("corrected")
         buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
         if atom.config.get('rubocop-auto-correct.notification')
-          atom.notifications.addSuccess(rubocop.stdout)
+          re = /^.+?(:[0-9]+:[0-9]+:.*$)/mg
+          offenses = rubocop.stdout.match(re)
+          offenses.map (offense) ->
+            message = offense.replace(re, buffer.getBaseName() + "$1")
+            atom.notifications.addSuccess(message)
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
