@@ -37,6 +37,27 @@ class RubocopAutoCorrect
     @subscriptions.add(bufferSavedSubscription)
     @subscriptions.add(editorDestroyedSubscription)
 
+  toggleAutoRun: ->
+    if atom.config.get('rubocop-auto-correct.autoRun')
+      atom.config.set('rubocop-auto-correct.autoRun', false)
+      atom.notifications.addSuccess("Trun OFF, Auto Run")
+    else
+      atom.config.set('rubocop-auto-correct.autoRun', true)
+      atom.notifications.addSuccess("Trun ON, Auto Run")
+
+  toggleNotification: ->
+    if atom.config.get('rubocop-auto-correct.notification')
+      atom.config.set('rubocop-auto-correct.notification', false)
+      atom.notifications.addSuccess("Trun OFF, Notification")
+    else
+      atom.config.set('rubocop-auto-correct.notification', true)
+      atom.notifications.addSuccess("Trun ON, Notification")
+
+  run: (editor) ->
+    unless editor.getGrammar().scopeName.match("ruby")
+      return atom.notifications.addError("Only use source.ruby")
+    @autoCorrect(editor.getBuffer())
+
   autoCorrect: (buffer)  ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     tempFilePath = @makeTempFile("rubocop.rb")
@@ -64,29 +85,8 @@ class RubocopAutoCorrect
         if atom.config.get('rubocop-auto-correct.notification')
           atom.notifications.addSuccess(processed.stdout)
 
-  run: (editor) ->
-    unless editor.getGrammar().scopeName.match("ruby")
-      return atom.notifications.addError("Only use source.ruby")
-    @autoCorrect(editor.getBuffer())
-
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
     filePath = path.join(directory, filename)
     fs.writeFileSync(filePath, '')
     filePath
-
-  toggleAutoRun: ->
-    if atom.config.get('rubocop-auto-correct.autoRun')
-      atom.config.set('rubocop-auto-correct.autoRun', false)
-      atom.notifications.addSuccess("Trun OFF, Auto Run")
-    else
-      atom.config.set('rubocop-auto-correct.autoRun', true)
-      atom.notifications.addSuccess("Trun ON, Auto Run")
-
-  toggleNotification: ->
-    if atom.config.get('rubocop-auto-correct.notification')
-      atom.config.set('rubocop-auto-correct.notification', false)
-      atom.notifications.addSuccess("Trun OFF, Notification")
-    else
-      atom.config.set('rubocop-auto-correct.notification', true)
-      atom.notifications.addSuccess("Trun ON, Notification")
