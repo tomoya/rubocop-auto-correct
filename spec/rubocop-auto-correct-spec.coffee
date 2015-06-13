@@ -86,30 +86,6 @@ describe "RubocopAutoCorrect", ->
       @rubocopAutoCorrect.toggleNotification()
       expect(atom.config.get('rubocop-auto-correct').notification).toBe false
 
-  describe "when get options", ->
-    beforeEach ->
-      @rubocopAutoCorrect = new RubocopAutoCorrect
-
-    it 'should have only command and args options, When notification false', ->
-      atom.config.set('rubocop-auto-correct.notification', false)
-      editor = atom.workspace.getActiveTextEditor()
-      options = @rubocopAutoCorrect.getOptions(editor.getPath())
-      expect(Object.keys(options).length).toBe 3
-      expect(Object.keys(options)[0]).toBe "command"
-      expect(Object.keys(options)[1]).toBe "args"
-      expect(Object.keys(options)[2]).toBe "exit"
-
-    it 'should have full options, When notification true', ->
-      atom.config.set('rubocop-auto-correct.notification', true)
-      editor = atom.workspace.getActiveTextEditor()
-      options = @rubocopAutoCorrect.getOptions(editor.getPath())
-      expect(Object.keys(options).length).toBe 5
-      expect(Object.keys(options)[0]).toBe "command"
-      expect(Object.keys(options)[1]).toBe "args"
-      expect(Object.keys(options)[2]).toBe "stdout"
-      expect(Object.keys(options)[3]).toBe "stderr"
-      expect(Object.keys(options)[4]).toBe "exit"
-
   describe "when makeTempFile", ->
     it "run makeTempFile", ->
       @rubocopAutoCorrect = new RubocopAutoCorrect

@@ -1,4 +1,4 @@
-{BufferedProcess, CompositeDisposable} = require 'atom'
+{CompositeDisposable} = require 'atom'
 spawnSync = require('child_process').spawnSync
 which = require 'which'
 path = require 'path'
@@ -69,33 +69,6 @@ class RubocopAutoCorrect
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
     @autoCorrect(editor)
-
-  getOptions: (tempFilePath, buffer) ->
-    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-    args = ['-a', tempFilePath]
-    stdout = (output) ->
-      if output.match("corrected")
-        atom.notifications.addSuccess(output)
-    stderr = (output) ->
-      atom.notifications.addError(output)
-    exit = (code) ->
-      if code == 0
-        buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-
-    unless atom.config.get('rubocop-auto-correct.notification')
-      return {
-        command: command,
-        args: args,
-        exit: exit
-      }
-
-    {
-      command: command,
-      args: args,
-      stdout: stdout,
-      stderr: stderr,
-      exit: exit
-    }
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
