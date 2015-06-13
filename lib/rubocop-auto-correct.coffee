@@ -24,7 +24,7 @@ class RubocopAutoCorrect
 
   handleEvents: (editor) ->
     buffer = editor.getBuffer()
-    bufferSavedSubscription = buffer.onDidSave =>
+    bufferSavedSubscription = buffer.onWillSave =>
       buffer.transact =>
         if atom.config.get('rubocop-auto-correct.autoRun')
           @run(editor)
@@ -37,7 +37,11 @@ class RubocopAutoCorrect
     @subscriptions.add(editorDestroyedSubscription)
 
   autoCorrect: (editor)  ->
-    options = @getOptions(editor.getPath())
+    tempFilePath = @makeTempFile("rubocop.rb")
+    buffer = editor.getBuffer()
+    fs.writeFileSync(tempFilePath, buffer.getText())
+    options = @getOptions(tempFilePath, buffer)
+
     which options.command, (err) ->
       if (err)
         return atom.notifications.addFatalError(
@@ -54,30 +58,33 @@ class RubocopAutoCorrect
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
-    if editor.isModified()
-      editor.save()
     @autoCorrect(editor)
 
-  getOptions: (filePath) ->
+  getOptions: (tempFilePath, buffer) ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-    args = ['-a', filePath]
+    args = ['-a', tempFilePath]
     stdout = (output) ->
       if output.match("corrected")
         atom.notifications.addSuccess(output)
     stderr = (output) ->
       atom.notifications.addError(output)
+    exit = (code) ->
+      if code == 0
+        buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
 
     unless atom.config.get('rubocop-auto-correct.notification')
       return {
         command: command,
         args: args,
+        exit: exit
       }
 
     {
       command: command,
       args: args,
       stdout: stdout,
-      stderr: stderr
+      stderr: stderr,
+      exit: exit
     }
 
   makeTempFile: (filename) ->
