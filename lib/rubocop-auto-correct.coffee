@@ -1,5 +1,8 @@
 {BufferedProcess, CompositeDisposable} = require 'atom'
 which = require 'which'
+path = require 'path'
+fs = require 'fs-plus'
+temp = require 'temp'
 
 module.exports =
 class RubocopAutoCorrect
@@ -33,7 +36,8 @@ class RubocopAutoCorrect
     @subscriptions.add(bufferSavedSubscription)
     @subscriptions.add(editorDestroyedSubscription)
 
-  autoCorrect: (options)  ->
+  autoCorrect: (editor)  ->
+    options = @getOptions(editor.getPath())
     which options.command, (err) ->
       if (err)
         return atom.notifications.addFatalError(
@@ -52,7 +56,7 @@ class RubocopAutoCorrect
       return atom.notifications.addError("Only use source.ruby")
     if editor.isModified()
       editor.save()
-    @autoCorrect(@getOptions(editor.getPath()))
+    @autoCorrect(editor)
 
   getOptions: (filePath) ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
