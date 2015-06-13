@@ -63,7 +63,7 @@ For example `~/.rbenv/shims/rubocop`.
 
 ## TODO
 
-* [ ] apply buffer (not file)
+For now, there is nothing.
 
 ### Done
 
@@ -71,3 +71,4 @@ For example `~/.rbenv/shims/rubocop`.
 * [x] auto run
 * [x] error handle
 * [x] add spec
+* [x] apply buffer (not file)
