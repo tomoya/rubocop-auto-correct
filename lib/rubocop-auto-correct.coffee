@@ -1,5 +1,5 @@
 {CompositeDisposable} = require 'atom'
-spawnSync = require('child_process').spawnSync
+{spawnSync} = require 'child_process'
 which = require 'which'
 path = require 'path'
 fs = require 'fs-plus'
