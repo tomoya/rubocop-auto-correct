@@ -46,7 +46,6 @@ describe "RubocopAutoCorrect", ->
       buffer.setText("{ :atom => 'A hackable text editor for the 21st Century' }\n")
 
     it "manually run", ->
-      expect(buffer.getText()).toBe "{ :atom => 'A hackable text editor for the 21st Century' }\n"
       atom.commands.dispatch workspaceElement, 'rubocop-auto-correct:current-file'
 
       bufferChangedSpy = jasmine.createSpy()
@@ -57,7 +56,6 @@ describe "RubocopAutoCorrect", ->
         expect(buffer.getText()).toBe "{ atom: 'A hackable text editor for the 21st Century' }\n"
 
     it "auto run", ->
-      expect(buffer.getText()).toBe "{ :atom => 'A hackable text editor for the 21st Century' }\n"
       atom.config.set('rubocop-auto-correct.autoRun', true)
       editor.save()
 
