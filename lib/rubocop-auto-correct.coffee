@@ -1,4 +1,5 @@
 {BufferedProcess, CompositeDisposable} = require 'atom'
+spawnSync = require('child_process').spawnSync
 which = require 'which'
 path = require 'path'
 fs = require 'fs-plus'
@@ -40,9 +41,11 @@ class RubocopAutoCorrect
     tempFilePath = @makeTempFile("rubocop.rb")
     buffer = editor.getBuffer()
     fs.writeFileSync(tempFilePath, buffer.getText())
-    options = @getOptions(tempFilePath, buffer)
+    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+    args = ['-a', tempFilePath]
+    options = { encoding: 'utf-8', timeout: 5000 }
 
-    which options.command, (err) ->
+    which command, (err) ->
       if (err)
         return atom.notifications.addFatalError(
           "Rubocop command is not found.",
@@ -52,8 +55,15 @@ class RubocopAutoCorrect
           ''' }
         )
 
-      process = new BufferedProcess(options)
-      process
+      processed = spawnSync(command, args, options)
+
+      if processed.stderr != ""
+        return atom.notifications.addError(processed.stderr)
+
+      if processed.stdout.match("corrected")
+        buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
+        if atom.config.get('rubocop-auto-correct.notification')
+          atom.notifications.addSuccess(processed.stdout)
 
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
