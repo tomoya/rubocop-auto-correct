@@ -19,6 +19,7 @@ class RubocopAutoCorrect
           @run(editor)
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
+      'rubocop-auto-correct:toggle-correct-file': => @toggleCorrectFile()
 
   destroy: ->
     @subscriptions.dispose()
