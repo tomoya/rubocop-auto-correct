@@ -2,7 +2,7 @@
 
 Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
 
-![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/7874437/9f40b20a-05ea-11e5-8822-229c8f79abe4.gif)
+![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/8393555/a35f1530-1d4f-11e5-9a5f-089927e54f38.gif)
 
 ## Require
 
@@ -31,7 +31,7 @@ If you want to use from keybind, please setup `~/.atom/keymap.cson`
 
 ## Settings
 
-![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/7906495/31e36f0c-0867-11e5-8184-0bed41927757.png)
+![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/8393441/5636d7de-1d4a-11e5-9588-107a0eadb909.png)
 
 ### Auto Run
 
