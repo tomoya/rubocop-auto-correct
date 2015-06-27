@@ -1,3 +1,10 @@
+## v0.9.0 (2015-06-28)
+
+Features:
+
+- Can correct file directly
+  - Add correct file config
+
 ## v0.8.0 (2015-06-13)
 
 Features:

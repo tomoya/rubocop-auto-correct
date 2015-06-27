@@ -1,4 +1,4 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, BufferedProcess} = require 'atom'
 {spawnSync} = require 'child_process'
 which = require 'which'
 path = require 'path'
@@ -19,13 +19,14 @@ class RubocopAutoCorrect
           @run(editor)
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
+      'rubocop-auto-correct:toggle-correct-file': => @toggleCorrectFile()
 
   destroy: ->
     @subscriptions.dispose()
 
   handleEvents: (editor) ->
     buffer = editor.getBuffer()
-    bufferSavedSubscription = buffer.onWillSave =>
+    bufferSavedSubscription = buffer.onDidSave =>
       buffer.transact =>
         if atom.config.get('rubocop-auto-correct.autoRun')
           @run(editor)
@@ -53,12 +54,23 @@ class RubocopAutoCorrect
       atom.config.set('rubocop-auto-correct.notification', true)
       atom.notifications.addSuccess("Turn ON, Notification")
 
+  toggleCorrectFile: ->
+    if atom.config.get('rubocop-auto-correct.correctFile')
+      atom.config.set('rubocop-auto-correct.correctFile', false)
+      atom.notifications.addSuccess("Correct the buffer")
+    else
+      atom.config.set('rubocop-auto-correct.correctFile', true)
+      atom.notifications.addSuccess("Correct the file")
+
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
-    @autoCorrect(editor.getBuffer())
+    if atom.config.get('rubocop-auto-correct.correctFile')
+      @autoCorrectFile(editor.getPath())
+    else
+      @autoCorrectBuffer(editor.getBuffer())
 
-  autoCorrect: (buffer)  ->
+  autoCorrectBuffer: (buffer)  ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     tempFilePath = @makeTempFile("rubocop.rb")
     fs.writeFileSync(tempFilePath, buffer.getText())
@@ -88,6 +100,29 @@ class RubocopAutoCorrect
           offenses.map (offense) ->
             message = offense.replace(re, buffer.getBaseName() + "$1")
             atom.notifications.addSuccess(message)
+
+  autoCorrectFile: (filePath)  ->
+    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+    args = ['-a', filePath]
+    stdout = (output) ->
+      if output.match("corrected")
+        if atom.config.get('rubocop-auto-correct.notification')
+          atom.notifications.addSuccess(output)
+    stderr = (output) ->
+      atom.notifications.addError(output)
+
+    which command, (err) ->
+      if (err)
+        return atom.notifications.addFatalError(
+          "Rubocop command is not found.",
+          { detail: '''
+          When you don't install rubocop yet, Run `gem install rubocop` first.\n
+          If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+          ''' }
+        )
+
+      rubocop = new BufferedProcess({command, args, stdout, stderr})
+
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
