@@ -66,6 +66,8 @@ class RubocopAutoCorrect
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
     if atom.config.get('rubocop-auto-correct.correctFile')
+      if editor.isModified()
+        editor.save()
       @autoCorrectFile(editor.getPath())
     else
       @autoCorrectBuffer(editor.getBuffer())
