@@ -40,18 +40,18 @@ class RubocopAutoCorrect
   toggleAutoRun: ->
     if atom.config.get('rubocop-auto-correct.autoRun')
       atom.config.set('rubocop-auto-correct.autoRun', false)
-      atom.notifications.addSuccess("Trun OFF, Auto Run")
+      atom.notifications.addSuccess("Turn OFF, Auto Run")
     else
       atom.config.set('rubocop-auto-correct.autoRun', true)
-      atom.notifications.addSuccess("Trun ON, Auto Run")
+      atom.notifications.addSuccess("Turn ON, Auto Run")
 
   toggleNotification: ->
     if atom.config.get('rubocop-auto-correct.notification')
       atom.config.set('rubocop-auto-correct.notification', false)
-      atom.notifications.addSuccess("Trun OFF, Notification")
+      atom.notifications.addSuccess("Turn OFF, Notification")
     else
       atom.config.set('rubocop-auto-correct.notification', true)
-      atom.notifications.addSuccess("Trun ON, Notification")
+      atom.notifications.addSuccess("Turn ON, Notification")
 
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
