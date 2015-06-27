@@ -47,6 +47,8 @@ When you run `Rubocop Auto Correct: Toggle Auto Run` command, can change at any 
 
 If you want to correct directly in the file, When checked. You don't need to save after corrected.
 
+- default value is `false`
+
 I recommend to enable Auto Run & Correct File. Then, really all files are corrected automatically.
 
 ### Notification
