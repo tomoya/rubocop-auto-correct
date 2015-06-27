@@ -14,6 +14,10 @@ module.exports =
       description: 'If you want to disable notification, Please remove the check'
       type: 'boolean'
       default: true
+    correctFile:
+      description: 'When enabled, correct directly in the file (Don\'t need to save)'
+      type: 'boolean'
+      default: false
 
   activate: ->
     @rubocopAutoCorrect = new RubocopAutoCorrect()

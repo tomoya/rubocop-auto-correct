@@ -53,6 +53,14 @@ class RubocopAutoCorrect
       atom.config.set('rubocop-auto-correct.notification', true)
       atom.notifications.addSuccess("Turn ON, Notification")
 
+  toggleCorrectFile: ->
+    if atom.config.get('rubocop-auto-correct.correctFile')
+      atom.config.set('rubocop-auto-correct.correctFile', false)
+      atom.notifications.addSuccess("Correct the buffer")
+    else
+      atom.config.set('rubocop-auto-correct.correctFile', true)
+      atom.notifications.addSuccess("Correct the file")
+
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
