@@ -64,9 +64,10 @@ class RubocopAutoCorrect
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
-    @autoCorrect(editor.getBuffer())
+    unless atom.config.get('rubocop-auto-correct.correctFile')
+      @autoCorrectBuffer(editor.getBuffer())
 
-  autoCorrect: (buffer)  ->
+  autoCorrectBuffer: (buffer)  ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     tempFilePath = @makeTempFile("rubocop.rb")
     fs.writeFileSync(tempFilePath, buffer.getText())

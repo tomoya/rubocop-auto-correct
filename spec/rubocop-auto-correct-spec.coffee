@@ -45,26 +45,30 @@ describe "RubocopAutoCorrect", ->
     beforeEach ->
       buffer.setText("{ :atom => 'A hackable text editor for the 21st Century' }\n")
 
-    it "manually run", ->
-      atom.commands.dispatch workspaceElement, 'rubocop-auto-correct:current-file'
+    describe "when correct buffer", ->
+      beforeEach ->
+        atom.config.set('rubocop-auto-correct.correctFile', false)
 
-      bufferChangedSpy = jasmine.createSpy()
-      buffer.onDidChange(bufferChangedSpy)
-      waitsFor ->
-        bufferChangedSpy.callCount > 0
-      runs ->
-        expect(buffer.getText()).toBe "{ atom: 'A hackable text editor for the 21st Century' }\n"
+      it "manually run", ->
+        atom.commands.dispatch workspaceElement, 'rubocop-auto-correct:current-file'
 
-    it "auto run", ->
-      atom.config.set('rubocop-auto-correct.autoRun', true)
-      editor.save()
+        bufferChangedSpy = jasmine.createSpy()
+        buffer.onDidChange(bufferChangedSpy)
+        waitsFor ->
+          bufferChangedSpy.callCount > 0
+        runs ->
+          expect(buffer.getText()).toBe "{ atom: 'A hackable text editor for the 21st Century' }\n"
 
-      bufferChangedSpy = jasmine.createSpy()
-      buffer.onDidChange(bufferChangedSpy)
-      waitsFor ->
-        bufferChangedSpy.callCount > 0
-      runs ->
-        expect(buffer.getText()).toBe "{ atom: 'A hackable text editor for the 21st Century' }\n"
+      it "auto run", ->
+        atom.config.set('rubocop-auto-correct.autoRun', true)
+        editor.save()
+
+        bufferChangedSpy = jasmine.createSpy()
+        buffer.onDidChange(bufferChangedSpy)
+        waitsFor ->
+          bufferChangedSpy.callCount > 0
+        runs ->
+          expect(buffer.getText()).toBe "{ atom: 'A hackable text editor for the 21st Century' }\n"
 
   describe "when toggle config", ->
     beforeEach ->
