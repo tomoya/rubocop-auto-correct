@@ -43,6 +43,12 @@ Activation method is to run manually `Rubocop Auto Correct: Current File` Once a
 
 When you run `Rubocop Auto Correct: Toggle Auto Run` command, can change at any time.
 
+### Correct File
+
+If you want to correct directly in the file, When checked. You don't need to save after corrected.
+
+I recommend to enable Auto Run & Correct File. Then, really all files are corrected automatically.
+
 ### Notification
 
 When checked off, Disable after corrected notification.
