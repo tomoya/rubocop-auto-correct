@@ -69,14 +69,10 @@ For example `~/.rbenv/shims/rubocop`.
 
 - default value is `rubocop`
 
-## TODO
+## Contributing
 
-For now, there is nothing.
-
-### Done
-
-* [x] rubocop path setting in config
-* [x] auto run
-* [x] error handle
-* [x] add spec
-* [x] apply buffer (not file)
+1. Fork it ( https://github.com/tomoya/rubocop-auto-correct/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
