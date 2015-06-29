@@ -1,3 +1,7 @@
+## v1.0.0 (2015-06-30)
+
+- Rubocop Auto Correct 1.0 has been released.
+
 ## v0.9.0 (2015-06-28)
 
 Features:
