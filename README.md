@@ -18,11 +18,11 @@ Auto-correct ruby source code by using rubocop in Atom.
 2. Select `Rubocop Auto-correct` in Context menu
 3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menu bar
 
-## keymap example
+## Keymap example
 
-This package doesn't provide default keymap.
+This package does not provide default keymap.
 
-If you want to use from keybind, please setup `~/.atom/keymap.cson`
+If you want to use the commands from keybinding, please set up `~/.atom/keymap.cson` following the below:
 
 ```coffee
 'atom-text-editor[data-grammar~="ruby"]':
