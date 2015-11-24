@@ -45,7 +45,7 @@ You can enable/disable this option by `Rubocop Auto Correct: Toggle Auto Run` co
 
 ### Correct File
 
-You can correct file directly if you enable this option. You do not need to save file after correcting it.
+You can correct a file directly if you enable this option. You do not need to save file after correcting it.
 
 - default value is `false`
 
