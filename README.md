@@ -35,35 +35,35 @@ If you want to use the commands from keybinding, please set up `~/.atom/keymap.c
 
 ### Auto Run
 
-This package support auto run. When checked, Automatically run Rubocop auto correct. But, **It's to need activation**.
+This package supports auto-run. When checked, it runs Rubocop auto correct. But, **it does not run automatically unless you activate this package**.
 
-Activation method is to run manually `Rubocop Auto Correct: Current File` Once at Atom window.
+You can activate it by running manually `Rubocop Auto Correct: Current File` once at Atom window.
 
 - default value is `false`
 
-When you run `Rubocop Auto Correct: Toggle Auto Run` command, can change at any time.
+You can enable/disable this option by `Rubocop Auto Correct: Toggle Auto Run` command at any time.
 
 ### Correct File
 
-If you want to correct directly in the file, When checked. You don't need to save after corrected.
+You can correct file directly if you enable this option. You do not need to save file after correcting it.
 
 - default value is `false`
 
-I recommend to enable Auto Run & Correct File. Then, really all files are corrected automatically.
+I recommend you to enable `Auto Run` & `Correct File` options. Then, all files are corrected automatically.
 
 ### Notification
 
-When checked off, Disable after corrected notification.
+When this option is disabled, you do not receive any notifications even thought a file is corrected.
 
 - default value is `true`
 
-When you run `Rubocop Auto Correct: Toggle Notification` command, can change at any time.
+You can enable/disable this option by `Rubocop Auto Correct: Toggle Notification` command at any time.
 
 ### Rubocop Command Path
 
-When you don't install rubocop yet, Run `gem install rubocop` first.
+If you do not install rubocop yet, run `gem install rubocop` to install it!
 
-If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+If you already installed rubocop, please check package setting at `Rubocop Command Path`.
 
 For example `~/.rbenv/shims/rubocop`.
 
