@@ -1,6 +1,6 @@
 # rubocop-auto-correct package [![Build Status](https://travis-ci.org/tomoya/rubocop-auto-correct.svg?branch=master)](https://travis-ci.org/tomoya/rubocop-auto-correct)
 
-Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
+Auto-correct ruby source code by using rubocop in Atom.
 
 ![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/8393555/a35f1530-1d4f-11e5-9a5f-089927e54f38.gif)
 
