@@ -14,9 +14,9 @@ Auto-correct ruby source code by using rubocop in Atom.
 
 ## Usage
 
-1. Run `Rubocop Auto Correct: Current File` in Command Palette
+1. Run `Rubocop Auto Correct: Current File` from Command Palette
 2. Select `Rubocop Auto-correct` in Context menu
-3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menubar
+3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menu bar
 
 ## keymap example
 
