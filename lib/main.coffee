@@ -3,19 +3,19 @@ RubocopAutoCorrect = require './rubocop-auto-correct'
 module.exports =
   config:
     rubocopCommandPath:
-      description: 'If command doesnot work, please input rubocop full path. example: /Users/<username>/.rbenv/shims/rubocop)'
+      description: 'If the command does not work, please input rubocop full path here. Example: /Users/<username>/.rbenv/shims/rubocop)'
       type: 'string'
       default: 'rubocop'
     autoRun:
-      description: 'When you save the buffer, Automatically run Rubocop auto correct, But, need to run manually once at window'
+      description: 'When you save the buffer, automatically it runs Rubocop auto correct. You need to run manually once at window before you use the option.'
       type: 'boolean'
       default: false
     notification:
-      description: 'If you want to disable notification, Please remove the check'
+      description: 'When this option is disabled, you do not receive any notifications even thought a file is corrected.'
       type: 'boolean'
       default: true
     correctFile:
-      description: 'When enabled, correct directly in the file (Don\'t need to save)'
+      description: 'You can correct a file directly if you enable this option. You do not need to save file after correcting it.'
       type: 'boolean'
       default: false
 

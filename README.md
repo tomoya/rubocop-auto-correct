@@ -1,6 +1,6 @@
 # rubocop-auto-correct package [![Build Status](https://travis-ci.org/tomoya/rubocop-auto-correct.svg?branch=master)](https://travis-ci.org/tomoya/rubocop-auto-correct)
 
-Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
+Auto-correct ruby source code by using rubocop in Atom.
 
 ![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/8393555/a35f1530-1d4f-11e5-9a5f-089927e54f38.gif)
 
@@ -14,15 +14,15 @@ Apply RuboCop auto-correct in Atom. Scoped by `source.ruby`.
 
 ## Usage
 
-1. Run `Rubocop Auto Correct: Current File` in Command Palette
+1. Run `Rubocop Auto Correct: Current File` from Command Palette
 2. Select `Rubocop Auto-correct` in Context menu
-3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menubar
+3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menu bar
 
-## keymap example
+## Keymap example
 
-This package doesn't provide default keymap.
+This package does not provide default keymap.
 
-If you want to use from keybind, please setup `~/.atom/keymap.cson`
+If you want to use the commands from keybinding, please set up `~/.atom/keymap.cson` following the below:
 
 ```coffee
 'atom-text-editor[data-grammar~="ruby"]':
@@ -35,35 +35,35 @@ If you want to use from keybind, please setup `~/.atom/keymap.cson`
 
 ### Auto Run
 
-This package support auto run. When checked, Automatically run Rubocop auto correct. But, **It's to need activation**.
+This package supports auto-run. When checked, it runs Rubocop auto correct. But, **it does not run automatically unless you activate this package**.
 
-Activation method is to run manually `Rubocop Auto Correct: Current File` Once at Atom window.
+You can activate it by running manually `Rubocop Auto Correct: Current File` once at Atom window.
 
 - default value is `false`
 
-When you run `Rubocop Auto Correct: Toggle Auto Run` command, can change at any time.
+You can enable/disable this option by `Rubocop Auto Correct: Toggle Auto Run` command at any time.
 
 ### Correct File
 
-If you want to correct directly in the file, When checked. You don't need to save after corrected.
+You can correct a file directly if you enable this option. You do not need to save file after correcting it.
 
 - default value is `false`
 
-I recommend to enable Auto Run & Correct File. Then, really all files are corrected automatically.
+I recommend you to enable `Auto Run` & `Correct File` options. Then, all files are corrected automatically.
 
 ### Notification
 
-When checked off, Disable after corrected notification.
+When this option is disabled, you do not receive any notifications even thought a file is corrected.
 
 - default value is `true`
 
-When you run `Rubocop Auto Correct: Toggle Notification` command, can change at any time.
+You can enable/disable this option by `Rubocop Auto Correct: Toggle Notification` command at any time.
 
 ### Rubocop Command Path
 
-When you don't install rubocop yet, Run `gem install rubocop` first.
+If you do not install rubocop yet, run `gem install rubocop` to install it!
 
-If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+If you already installed rubocop, please check package setting at `Rubocop Command Path`.
 
 For example `~/.rbenv/shims/rubocop`.
 
