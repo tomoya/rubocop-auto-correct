@@ -69,6 +69,14 @@ For example `~/.rbenv/shims/rubocop`.
 
 - default value is `rubocop`
 
+### Debug Mode
+
+When this option is disabled, you can get log on console.
+
+- default value is `false`
+
+You can enable/disable this option by `Rubocop Auto Correct: Toggle Debug Mode` command at any time.
+
 ## Contributing
 
 1. Fork it ( https://github.com/tomoya/rubocop-auto-correct/fork )

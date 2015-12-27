@@ -20,6 +20,7 @@ class RubocopAutoCorrect
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
       'rubocop-auto-correct:toggle-correct-file': => @toggleCorrectFile()
+      'rubocop-auto-correct:toggle-debug-mode': => @toggleDebugMode()
 
   destroy: ->
     @subscriptions.dispose()
@@ -62,6 +63,14 @@ class RubocopAutoCorrect
       atom.config.set('rubocop-auto-correct.correctFile', true)
       atom.notifications.addSuccess("Correct the file")
 
+  toggleDebugMode: ->
+    if atom.config.get('rubocop-auto-correct.debugMode')
+      atom.config.set('rubocop-auto-correct.debugMode', false)
+      atom.notifications.addSuccess("Turn OFF, Debug Mode")
+    else
+      atom.config.set('rubocop-auto-correct.debugMode', true)
+      atom.notifications.addSuccess("Turn ON, Debug Mode")
+
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")
       return atom.notifications.addError("Only use source.ruby")
@@ -78,6 +87,8 @@ class RubocopAutoCorrect
     fs.writeFileSync(tempFilePath, buffer.getText())
     args = ['-a', tempFilePath]
     options = { encoding: 'utf-8', timeout: 5000 }
+    notification = atom.config.get('rubocop-auto-correct.notification')
+    debug = atom.config.get('rubocop-auto-correct.debugMode')
 
     which command, (err) ->
       if (err)
@@ -92,26 +103,31 @@ class RubocopAutoCorrect
       rubocop = spawnSync(command, args, options)
 
       if rubocop.stderr != ""
-        return atom.notifications.addError(rubocop.stderr)
+        console.error(rubocop.stderr) if debug
+        atom.notifications.addError(rubocop.stderr) if notification
 
       if rubocop.stdout.match("corrected")
         buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-        if atom.config.get('rubocop-auto-correct.notification')
+        if notification || debug
           re = /^.+?(:[0-9]+:[0-9]+:.*$)/mg
           offenses = rubocop.stdout.match(re)
           offenses.map (offense) ->
             message = offense.replace(re, buffer.getBaseName() + "$1")
-            atom.notifications.addSuccess(message)
+            console.log(message) if debug
+            atom.notifications.addSuccess(message) if notification
 
   autoCorrectFile: (filePath)  ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     args = ['-a', filePath]
+    debug = atom.config.get('rubocop-auto-correct.debugMode')
+    notification = atom.config.get('rubocop-auto-correct.notification')
     stdout = (output) ->
       if output.match("corrected")
-        if atom.config.get('rubocop-auto-correct.notification')
-          atom.notifications.addSuccess(output)
+        console.log(output) if debug
+        atom.notifications.addSuccess(output) if notification
     stderr = (output) ->
-      atom.notifications.addError(output)
+      console.error(output) if debug
+      atom.notifications.addError(output) if notification
 
     which command, (err) ->
       if (err)
