@@ -18,6 +18,10 @@ module.exports =
       description: 'You can correct a file directly if you enable this option. You do not need to save file after correcting it.'
       type: 'boolean'
       default: false
+    debugMode:
+      description: 'You can get log on console panel if you enable this option.'
+      type: 'boolean'
+      default: false
 
   activate: ->
     @rubocopAutoCorrect = new RubocopAutoCorrect()
