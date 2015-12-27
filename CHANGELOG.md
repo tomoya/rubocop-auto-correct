@@ -1,3 +1,10 @@
+## v1.1.0 (201-12-27)
+
+Features:
+
+- Add new option `Debug Mode`
+  - Print log on console when debug-mode option was enabled
+
 ## v1.0.1 (2015-11-24)
 
 - Modify texts
