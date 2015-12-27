@@ -20,6 +20,7 @@ class RubocopAutoCorrect
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
       'rubocop-auto-correct:toggle-correct-file': => @toggleCorrectFile()
+      'rubocop-auto-correct:toggle-debug-mode': => @toggleDebugMode()
 
   destroy: ->
     @subscriptions.dispose()
@@ -61,6 +62,14 @@ class RubocopAutoCorrect
     else
       atom.config.set('rubocop-auto-correct.correctFile', true)
       atom.notifications.addSuccess("Correct the file")
+
+  toggleDebugMode: ->
+    if atom.config.get('rubocop-auto-correct.debugMode')
+      atom.config.set('rubocop-auto-correct.debugMode', false)
+      atom.notifications.addSuccess("Turn OFF, Debug Mode")
+    else
+      atom.config.set('rubocop-auto-correct.debugMode', true)
+      atom.notifications.addSuccess("Turn ON, Debug Mode")
 
   run: (editor) ->
     unless editor.getGrammar().scopeName.match("ruby")

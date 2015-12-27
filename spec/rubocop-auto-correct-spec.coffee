@@ -122,6 +122,13 @@ describe "RubocopAutoCorrect", ->
       @rubocopAutoCorrect.toggleCorrectFile()
       expect(atom.config.get('rubocop-auto-correct').correctFile).toBe false
 
+    it "changes debug mode", ->
+      atom.config.set('rubocop-auto-correct.debug-mode', false)
+      @rubocopAutoCorrect.toggleDebugMode()
+      expect(atom.config.get('rubocop-auto-correct').debugMode).toBe true
+      @rubocopAutoCorrect.toggleDebugMode()
+      expect(atom.config.get('rubocop-auto-correct').debugMode).toBe false
+
   describe "when makeTempFile", ->
     it "run makeTempFile", ->
       @rubocopAutoCorrect = new RubocopAutoCorrect
