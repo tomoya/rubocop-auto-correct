@@ -31,7 +31,7 @@ If you want to use the commands from keybinding, please set up `~/.atom/keymap.c
 
 ## Settings
 
-![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/8393441/5636d7de-1d4a-11e5-9588-107a0eadb909.png)
+![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/12009029/a5a30586-aca1-11e5-9bf8-883418341057.png)
 
 ### Auto Run
 
