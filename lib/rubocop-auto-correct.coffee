@@ -103,10 +103,8 @@ class RubocopAutoCorrect
       rubocop = spawnSync(command, args, options)
 
       if rubocop.stderr != ""
-        if debug
-          return console.error(rubocop.stderr)
-        if notification
-          return atom.notifications.addError(rubocop.stderr)
+        console.error(rubocop.stderr) if debug
+        atom.notifications.addError(rubocop.stderr) if notification
 
       if rubocop.stdout.match("corrected")
         buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
@@ -115,10 +113,8 @@ class RubocopAutoCorrect
           offenses = rubocop.stdout.match(re)
           offenses.map (offense) ->
             message = offense.replace(re, buffer.getBaseName() + "$1")
-            if debug
-              console.log(message)
-            if notification
-              atom.notifications.addSuccess(message)
+            console.log(message) if debug
+            atom.notifications.addSuccess(message) if notification
 
   autoCorrectFile: (filePath)  ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
