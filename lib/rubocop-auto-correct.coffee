@@ -87,6 +87,8 @@ class RubocopAutoCorrect
     fs.writeFileSync(tempFilePath, buffer.getText())
     args = ['-a', tempFilePath]
     options = { encoding: 'utf-8', timeout: 5000 }
+    notification = atom.config.get('rubocop-auto-correct.notification')
+    debug = atom.config.get('rubocop-auto-correct.debugMode')
 
     which command, (err) ->
       if (err)
@@ -101,26 +103,35 @@ class RubocopAutoCorrect
       rubocop = spawnSync(command, args, options)
 
       if rubocop.stderr != ""
-        return atom.notifications.addError(rubocop.stderr)
+        if debug
+          return console.error(rubocop.stderr)
+        if notification
+          return atom.notifications.addError(rubocop.stderr)
 
       if rubocop.stdout.match("corrected")
         buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-        if atom.config.get('rubocop-auto-correct.notification')
+        if notification || debug
           re = /^.+?(:[0-9]+:[0-9]+:.*$)/mg
           offenses = rubocop.stdout.match(re)
           offenses.map (offense) ->
             message = offense.replace(re, buffer.getBaseName() + "$1")
-            atom.notifications.addSuccess(message)
+            if debug
+              console.log(message)
+            if notification
+              atom.notifications.addSuccess(message)
 
   autoCorrectFile: (filePath)  ->
     command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     args = ['-a', filePath]
+    debug = atom.config.get('rubocop-auto-correct.debugMode')
+    notification = atom.config.get('rubocop-auto-correct.notification')
     stdout = (output) ->
       if output.match("corrected")
-        if atom.config.get('rubocop-auto-correct.notification')
-          atom.notifications.addSuccess(output)
+        console.log(output) if debug
+        atom.notifications.addSuccess(output) if notification
     stderr = (output) ->
-      atom.notifications.addError(output)
+      console.error(output) if debug
+      atom.notifications.addError(output) if notification
 
     which command, (err) ->
       if (err)
