@@ -16,6 +16,15 @@ You have [rubocop](https://github.com/bbatsov/rubocop) installed.
 2. Select `Rubocop Auto-correct` in Context menu
 3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menu bar
 
+### Commands
+
+| Name | Description |
+| ---- | ----------- |
+| `RUbocop Auto Correct: Current File` | Run rubocop auto-correct to current file |
+| `RUbocop Auto Correct: Toggle Notification` | Toggle notification option |
+| `RUbocop Auto Correct: Toggle Auto Run` | Toggle auto run option |
+| `RUbocop Auto Correct: Toggle Debug Mode` | Toggle debug-mode option |
+
 ## Keymap example
 
 This package does not provide default keymap.
