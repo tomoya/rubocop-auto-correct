@@ -4,11 +4,9 @@ Auto-correct ruby source code by using rubocop in Atom.
 
 ![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/8393555/a35f1530-1d4f-11e5-9a5f-089927e54f38.gif)
 
-## Require
+## Prerequisites
 
-* [rubocop](https://github.com/bbatsov/rubocop)
-
-### Install
+You have [rubocop](https://github.com/bbatsov/rubocop) installed.
 
     $ gem install rubocop
 
