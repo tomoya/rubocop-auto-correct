@@ -4,11 +4,9 @@ Auto-correct ruby source code by using rubocop in Atom.
 
 ![rubocop-auto-correct:current-file](https://cloud.githubusercontent.com/assets/18009/8393555/a35f1530-1d4f-11e5-9a5f-089927e54f38.gif)
 
-## Require
+## Prerequisites
 
-* [rubocop](https://github.com/bbatsov/rubocop)
-
-### Install
+You have [rubocop](https://github.com/bbatsov/rubocop) installed.
 
     $ gem install rubocop
 
@@ -17,6 +15,15 @@ Auto-correct ruby source code by using rubocop in Atom.
 1. Run `Rubocop Auto Correct: Current File` from Command Palette
 2. Select `Rubocop Auto-correct` in Context menu
 3. Select [Packages] -> [Rubocop Auto-correct] -> [Current File] in menu bar
+
+### Commands
+
+| Name | Description |
+| ---- | ----------- |
+| `RUbocop Auto Correct: Current File` | Run rubocop auto-correct to current file |
+| `RUbocop Auto Correct: Toggle Notification` | Toggle notification option |
+| `RUbocop Auto Correct: Toggle Auto Run` | Toggle auto run option |
+| `RUbocop Auto Correct: Toggle Debug Mode` | Toggle debug-mode option |
 
 ## Keymap example
 
