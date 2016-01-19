@@ -82,10 +82,13 @@ class RubocopAutoCorrect
       @autoCorrectBuffer(editor.getBuffer())
 
   autoCorrectBuffer: (buffer)  ->
-    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
     tempFilePath = @makeTempFile("rubocop.rb")
     fs.writeFileSync(tempFilePath, buffer.getText())
-    args = ['-a', tempFilePath]
+    commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+                                .split(/\s+/).filter((i) -> i)
+                                .concat(['-a', tempFilePath])
+    command = commandWithArgs[0]
+    args = commandWithArgs[1..]
     options = { encoding: 'utf-8', timeout: 5000 }
     notification = atom.config.get('rubocop-auto-correct.notification')
     debug = atom.config.get('rubocop-auto-correct.debugMode')
@@ -117,8 +120,11 @@ class RubocopAutoCorrect
             atom.notifications.addSuccess(message) if notification
 
   autoCorrectFile: (filePath)  ->
-    command = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-    args = ['-a', filePath]
+    commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+                                .split(/\s+/).filter((i) -> i)
+                                .concat(['-a', filePath])
+    command = commandWithArgs[0]
+    args = commandWithArgs[1..]
     debug = atom.config.get('rubocop-auto-correct.debugMode')
     notification = atom.config.get('rubocop-auto-correct.notification')
     stdout = (output) ->

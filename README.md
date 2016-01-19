@@ -68,11 +68,9 @@ You can enable/disable this option by `Rubocop Auto Correct: Toggle Notification
 
 ### Rubocop Command Path
 
-If you do not install rubocop yet, run `gem install rubocop` to install it!
+If you already installed rubocop, please check package setting at `Rubocop Command Path`. For example `~/.rbenv/shims/rubocop`.
 
-If you already installed rubocop, please check package setting at `Rubocop Command Path`.
-
-For example `~/.rbenv/shims/rubocop`.
+If you want to set arguments, please set arguments with command at here. For example `rubocop --format simple`
 
 - default value is `rubocop`
 
