@@ -1,4 +1,12 @@
-## v1.1.0 (201-12-27)
+## v1.2.0 (2016-01-20)
+
+Features:
+
+- Improve `Rubocop Command Path` option
+  - Allow the command configure for Rubocop to have arguments.
+  - Thanks @amuino #21
+
+## v1.1.0 (2015-12-27)
 
 Features:
 
