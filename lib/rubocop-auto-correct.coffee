@@ -81,12 +81,21 @@ class RubocopAutoCorrect
     else
       @autoCorrectBuffer(editor.getBuffer())
 
+  projectRootRubocopConfig: (filePath) ->
+    [projectPath, relativePath] = atom.project.relativizePath(filePath)
+    rubocopConfigPath = projectPath+'/.rubocop.yml'
+    if (fs.existsSync(rubocopConfigPath))
+      ['--config', rubocopConfigPath]
+    else
+      []
+
   autoCorrectBuffer: (buffer)  ->
     tempFilePath = @makeTempFile("rubocop.rb")
     fs.writeFileSync(tempFilePath, buffer.getText())
     commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
                                 .split(/\s+/).filter((i) -> i)
                                 .concat(['-a', tempFilePath])
+                                .concat(@projectRootRubocopConfig(buffer.getPath()))
     command = commandWithArgs[0]
     args = commandWithArgs[1..]
     options = { encoding: 'utf-8', timeout: 5000 }
@@ -123,6 +132,7 @@ class RubocopAutoCorrect
     commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
                                 .split(/\s+/).filter((i) -> i)
                                 .concat(['-a', filePath])
+                                .concat(@projectRootRubocopConfig(filePath))
     command = commandWithArgs[0]
     args = commandWithArgs[1..]
     debug = atom.config.get('rubocop-auto-correct.debugMode')
