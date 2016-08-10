@@ -83,13 +83,10 @@ class RubocopAutoCorrect
     else
       []
 
-  autoCorrectBuffer: (buffer)  ->
-    tempFilePath = @makeTempFile("rubocop.rb")
-    fs.writeFileSync(tempFilePath, buffer.getText())
+  rubocopCommand: ->
     commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
                                 .split(/\s+/).filter((i) -> i)
-                                .concat(['-a', tempFilePath])
-                                .concat(@projectRootRubocopConfig(buffer.getPath()))
+
     command = commandWithArgs[0]
     args = commandWithArgs[1..]
 
@@ -102,6 +99,17 @@ class RubocopAutoCorrect
           If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
           ''' }
         )
+    [command, args]
+
+  autoCorrectBuffer: (buffer)  ->
+    tempFilePath = @makeTempFile("rubocop.rb")
+    fs.writeFileSync(tempFilePath, buffer.getText())
+
+    rubocopCommand = @rubocopCommand()
+    command = rubocopCommand[0]
+    args = rubocopCommand[1]
+      .concat(['-a', tempFilePath])
+      .concat(@projectRootRubocopConfig(buffer.getPath()))
 
     rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
 
@@ -112,22 +120,11 @@ class RubocopAutoCorrect
       @rubocopOutput(buffer.getBaseName(), rubocop.stdout)
 
   autoCorrectFile: (filePath)  ->
-    commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-                                .split(/\s+/).filter((i) -> i)
-                                .concat(['-a', filePath])
-                                .concat(@projectRootRubocopConfig(filePath))
-    command = commandWithArgs[0]
-    args = commandWithArgs[1..]
-
-    which command, (err) ->
-      if (err)
-        return atom.notifications.addFatalError(
-          "Rubocop command is not found.",
-          { detail: '''
-          When you don't install rubocop yet, Run `gem install rubocop` first.\n
-          If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
-          ''' }
-        )
+    rubocopCommand = @rubocopCommand()
+    command = rubocopCommand[0]
+    args = rubocopCommand[1]
+      .concat(['-a', filePath])
+      .concat(@projectRootRubocopConfig(filePath))
 
     stdout = (output) =>
       @rubocopOutput(filePath.replace(/.+\//, ""), output)
@@ -147,9 +144,11 @@ class RubocopAutoCorrect
       offenses.map (offense) ->
         message = offense.replace(re, fileName + "$1")
         console.log(message) if debug
-        atom.notifications.addSuccess(message) if notification
+        atom.notifications.addWarning(message) if notification
+    else if output.match("no offenses")
+      atom.notifications.addSuccess(output) if notification
     else
-      atom.notifications.addError(output) if notification
+      atom.notifications.addInfo(output) if notification
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
