@@ -92,8 +92,6 @@ class RubocopAutoCorrect
                                 .concat(@projectRootRubocopConfig(buffer.getPath()))
     command = commandWithArgs[0]
     args = commandWithArgs[1..]
-    debug = atom.config.get('rubocop-auto-correct.debugMode')
-    notification = atom.config.get('rubocop-auto-correct.notification')
 
     which command, (err) ->
       if (err)
