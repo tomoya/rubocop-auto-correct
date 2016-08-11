@@ -86,6 +86,7 @@ class RubocopAutoCorrect
   rubocopCommand: ->
     commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
                                 .split(/\s+/).filter((i) -> i)
+                                .concat(["--format", "json"])
     [commandWithArgs[0], commandWithArgs[1..]]
 
   autoCorrectBuffer: (buffer)  ->
@@ -105,10 +106,10 @@ class RubocopAutoCorrect
         else
           rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
           if (rubocop.status != 0)
-            @rubocopOutput(buffer.getBaseName(), rubocop.stderr)
+            @rubocopOutput(rubocop.stderr)
           else
             buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-            @rubocopOutput(buffer.getBaseName(), rubocop.stdout)
+            @rubocopOutput(rubocop.stdout)
 
   autoCorrectFile: (filePath)  ->
     rubocopCommand = @rubocopCommand()
@@ -119,9 +120,9 @@ class RubocopAutoCorrect
         .concat(@projectRootRubocopConfig(filePath))
 
       stdout = (output) =>
-        @rubocopOutput(filePath.replace(/.+\//, ""), output)
+        @rubocopOutput(output)
       stderr = (output) =>
-        @rubocopOutput(filePath.replace(/.+\//, ""), output)
+        @rubocopOutput(output)
 
       which command, (err) =>
         if (err)
@@ -138,22 +139,30 @@ class RubocopAutoCorrect
       ''' }
     )
 
-  rubocopOutput: (fileName, output) ->
+  rubocopOutput: (output) ->
     debug = atom.config.get('rubocop-auto-correct.debugMode')
     notification = atom.config.get('rubocop-auto-correct.notification')
     console.log(output) if debug
 
-    if output.match("corrected")
-      re = /^.+?(:[0-9]+:[0-9]+:.*$)/mg
-      offenses = output.match(re)
-      offenses.map (offense) ->
-        message = offense.replace(re, fileName + "$1")
-        console.log(message) if debug
-        atom.notifications.addWarning(message) if notification
-    else if output.match("no offenses")
-      atom.notifications.addSuccess(output) if notification
+    data = JSON.parse(output)
+    console.log(data) if debug
+
+    if (data.summary.offense_count == 0)
+      atom.notifications.addSuccess("No offenses found") if notification
     else
-      atom.notifications.addInfo(output) if notification
+      atom.notifications.addWarning("#{data.summary.offense_count} offenses found!")
+      for file in data.files
+        for offense in file.offenses
+          if offense.corrected
+            atom.notifications.addSuccess(
+              "Line: #{offense.location.line}, Col:#{offense.location.column} (FIXED)",
+              { detail: "#{offense.message}" }
+            )
+          else
+            atom.notifications.addWarning(
+              "Line: #{offense.location.line}, Col:#{offense.location.column}",
+              { detail: "#{offense.message}" }
+            )
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
