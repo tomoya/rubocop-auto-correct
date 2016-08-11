@@ -86,52 +86,57 @@ class RubocopAutoCorrect
   rubocopCommand: ->
     commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
                                 .split(/\s+/).filter((i) -> i)
-
-    command = commandWithArgs[0]
-    args = commandWithArgs[1..]
-
-    which command, (err) ->
-      if (err)
-        return atom.notifications.addFatalError(
-          "Rubocop command is not found.",
-          { detail: '''
-          When you don't install rubocop yet, Run `gem install rubocop` first.\n
-          If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
-          ''' }
-        )
-    [command, args]
+    [commandWithArgs[0], commandWithArgs[1..]]
 
   autoCorrectBuffer: (buffer)  ->
     tempFilePath = @makeTempFile("rubocop.rb")
     fs.writeFileSync(tempFilePath, buffer.getText())
 
     rubocopCommand = @rubocopCommand()
-    command = rubocopCommand[0]
-    args = rubocopCommand[1]
-      .concat(['-a', tempFilePath])
-      .concat(@projectRootRubocopConfig(buffer.getPath()))
+    if (rubocopCommand != undefined)
+      command = rubocopCommand[0]
+      args = rubocopCommand[1]
+        .concat(['-a', tempFilePath])
+        .concat(@projectRootRubocopConfig(buffer.getPath()))
 
-    rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
-
-    if (rubocop.status != 0)
-      @rubocopOutput(buffer.getBaseName(), rubocop.stderr)
-    else
-      buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-      @rubocopOutput(buffer.getBaseName(), rubocop.stdout)
+      which command, (err) =>
+        if (err)
+          @rubocopNotFoundError()
+        else
+          rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
+          if (rubocop.status != 0)
+            @rubocopOutput(buffer.getBaseName(), rubocop.stderr)
+          else
+            buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
+            @rubocopOutput(buffer.getBaseName(), rubocop.stdout)
 
   autoCorrectFile: (filePath)  ->
     rubocopCommand = @rubocopCommand()
-    command = rubocopCommand[0]
-    args = rubocopCommand[1]
-      .concat(['-a', filePath])
-      .concat(@projectRootRubocopConfig(filePath))
+    if (rubocopCommand != undefined)
+      command = rubocopCommand[0]
+      args = rubocopCommand[1]
+        .concat(['-a', filePath])
+        .concat(@projectRootRubocopConfig(filePath))
 
-    stdout = (output) =>
-      @rubocopOutput(filePath.replace(/.+\//, ""), output)
-    stderr = (output) =>
-      @rubocopOutput(filePath.replace(/.+\//, ""), output)
+      stdout = (output) =>
+        @rubocopOutput(filePath.replace(/.+\//, ""), output)
+      stderr = (output) =>
+        @rubocopOutput(filePath.replace(/.+\//, ""), output)
 
-    rubocop = new BufferedProcess({command, args, stdout, stderr})
+      which command, (err) =>
+        if (err)
+          @rubocopNotFoundError()
+        else
+          new BufferedProcess({command, args, stdout, stderr})
+
+  rubocopNotFoundError: ->
+    atom.notifications.addError(
+      "Rubocop command is not found.",
+      { detail: '''
+      When you don't install rubocop yet, Run `gem install rubocop` first.\n
+      If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+      ''' }
+    )
 
   rubocopOutput: (fileName, output) ->
     debug = atom.config.get('rubocop-auto-correct.debugMode')
