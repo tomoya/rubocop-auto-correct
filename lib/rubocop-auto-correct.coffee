@@ -105,11 +105,11 @@ class RubocopAutoCorrect
           @rubocopNotFoundError()
         else
           rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
-          if (rubocop.status != 0)
-            @rubocopOutput(rubocop.stderr)
+          if (rubocop.stderr)
+            @rubocopOutput({"stderr": "#{rubocop.stderr}"})
           else
             buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-            @rubocopOutput(rubocop.stdout)
+            @rubocopOutput(JSON.parse(rubocop.stdout))
 
   autoCorrectFile: (filePath)  ->
     rubocopCommand = @rubocopCommand()
@@ -120,9 +120,9 @@ class RubocopAutoCorrect
         .concat(@projectRootRubocopConfig(filePath))
 
       stdout = (output) =>
-        @rubocopOutput(output)
+        @rubocopOutput(JSON.parse(output))
       stderr = (output) =>
-        @rubocopOutput(output)
+        @rubocopOutput({"stderr": "#{output}"})
 
       which command, (err) =>
         if (err)
@@ -139,30 +139,30 @@ class RubocopAutoCorrect
       ''' }
     )
 
-  rubocopOutput: (output) ->
+  rubocopOutput: (data) =>
     debug = atom.config.get('rubocop-auto-correct.debugMode')
     notification = atom.config.get('rubocop-auto-correct.notification')
-    console.log(output) if debug
 
-    data = JSON.parse(output)
     console.log(data) if debug
 
-    if (data.summary.offense_count == 0)
+    if (data.stderr)
+      atom.notifications.addError(data.stderr) if notification
+    else if (data.summary.offense_count == 0)
       atom.notifications.addSuccess("No offenses found") if notification
     else
-      atom.notifications.addWarning("#{data.summary.offense_count} offenses found!")
+      atom.notifications.addWarning("#{data.summary.offense_count} offenses found!") if notification
       for file in data.files
         for offense in file.offenses
           if offense.corrected
             atom.notifications.addSuccess(
               "Line: #{offense.location.line}, Col:#{offense.location.column} (FIXED)",
               { detail: "#{offense.message}" }
-            )
+            ) if notification
           else
             atom.notifications.addWarning(
               "Line: #{offense.location.line}, Col:#{offense.location.column}",
               { detail: "#{offense.message}" }
-            )
+            ) if notification
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
