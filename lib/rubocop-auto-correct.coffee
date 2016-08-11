@@ -94,41 +94,39 @@ class RubocopAutoCorrect
     fs.writeFileSync(tempFilePath, buffer.getText())
 
     rubocopCommand = @rubocopCommand()
-    if (rubocopCommand != undefined)
-      command = rubocopCommand[0]
-      args = rubocopCommand[1]
-        .concat(['-a', tempFilePath])
-        .concat(@projectRootRubocopConfig(buffer.getPath()))
+    command = rubocopCommand[0]
+    args = rubocopCommand[1]
+      .concat(['-a', tempFilePath])
+      .concat(@projectRootRubocopConfig(buffer.getPath()))
 
-      which command, (err) =>
-        if (err)
-          @rubocopNotFoundError()
+    which command, (err) =>
+      if (err)
+        @rubocopNotFoundError()
+      else
+        rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
+        if (rubocop.stderr)
+          @rubocopOutput({"stderr": "#{rubocop.stderr}"})
         else
-          rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
-          if (rubocop.stderr)
-            @rubocopOutput({"stderr": "#{rubocop.stderr}"})
-          else
-            buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-            @rubocopOutput(JSON.parse(rubocop.stdout))
+          buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
+          @rubocopOutput(JSON.parse(rubocop.stdout))
 
   autoCorrectFile: (filePath)  ->
     rubocopCommand = @rubocopCommand()
-    if (rubocopCommand != undefined)
-      command = rubocopCommand[0]
-      args = rubocopCommand[1]
-        .concat(['-a', filePath])
-        .concat(@projectRootRubocopConfig(filePath))
+    command = rubocopCommand[0]
+    args = rubocopCommand[1]
+      .concat(['-a', filePath])
+      .concat(@projectRootRubocopConfig(filePath))
 
-      stdout = (output) =>
-        @rubocopOutput(JSON.parse(output))
-      stderr = (output) =>
-        @rubocopOutput({"stderr": "#{output}"})
+    stdout = (output) =>
+      @rubocopOutput(JSON.parse(output))
+    stderr = (output) =>
+      @rubocopOutput({"stderr": "#{output}"})
 
-      which command, (err) =>
-        if (err)
-          @rubocopNotFoundError()
-        else
-          new BufferedProcess({command, args, stdout, stderr})
+    which command, (err) =>
+      if (err)
+        @rubocopNotFoundError()
+      else
+        new BufferedProcess({command, args, stdout, stderr})
 
   rubocopNotFoundError: ->
     atom.notifications.addError(
