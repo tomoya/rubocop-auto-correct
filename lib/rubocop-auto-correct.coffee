@@ -72,10 +72,11 @@ class RubocopAutoCorrect
       else
         @autoCorrectBuffer(editor.getBuffer())
 
-  projectRootRubocopConfig: (filePath) ->
+  rubocopConfigPath: (filePath) ->
+    configFile = '/.rubocop.yml'
     [projectPath, relativePath] = atom.project.relativizePath(filePath)
-    projectConfigPath = projectPath + '/.rubocop.yml'
-    homeConfigPath = fs.getHomeDirectory() + '/.rubocop.yml'
+    projectConfigPath = projectPath + configFile
+    homeConfigPath = fs.getHomeDirectory() + configFile
     if (fs.existsSync(projectConfigPath))
       ['--config', projectConfigPath]
     else if (fs.existsSync(homeConfigPath))
@@ -97,7 +98,7 @@ class RubocopAutoCorrect
     command = rubocopCommand[0]
     args = rubocopCommand[1]
       .concat(['-a', tempFilePath])
-      .concat(@projectRootRubocopConfig(buffer.getPath()))
+      .concat(@rubocopConfigPath(buffer.getPath()))
 
     which command, (err) =>
       if (err)
@@ -115,7 +116,7 @@ class RubocopAutoCorrect
     command = rubocopCommand[0]
     args = rubocopCommand[1]
       .concat(['-a', filePath])
-      .concat(@projectRootRubocopConfig(filePath))
+      .concat(@rubocopConfigPath(filePath))
 
     stdout = (output) =>
       @rubocopOutput(JSON.parse(output))
