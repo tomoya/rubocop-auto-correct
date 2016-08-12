@@ -100,7 +100,7 @@ describe "RubocopAutoCorrect", ->
   describe "when command with arguments", ->
     beforeEach ->
       buffer.setText("{ :atom => 'A hackable text editor for the 21st Century' }\n")
-      atom.config.set('rubocop-auto-correct.rubocopCommandPath', 'rubocop --format simple')
+      atom.config.set('rubocop-auto-correct.rubocopCommandPath', 'rubocop')
 
     describe "when correct buffer", ->
       it "manually run", ->
