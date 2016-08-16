@@ -1,3 +1,11 @@
+## v1.4.0 (2016-08-16)
+
+Features:
+
+- Improve notifications (#31)
+- Search `.rubocop.yml` from home directory
+  - If you have project config, it will be used preferentially.
+
 ## v1.3.0 (2016-07-21)
 
 Features:
