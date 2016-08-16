@@ -14,9 +14,7 @@ class RubocopAutoCorrect
         @handleEvents(editor)
 
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'rubocop-auto-correct:current-file': =>
-        if editor = atom.workspace.getActiveTextEditor()
-          @run(editor)
+      'rubocop-auto-correct:current-file': => @run(atom.workspace.getActiveTextEditor())
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
       'rubocop-auto-correct:toggle-correct-file': => @toggleCorrectFile()
@@ -39,124 +37,138 @@ class RubocopAutoCorrect
     @subscriptions.add(bufferSavedSubscription)
     @subscriptions.add(editorDestroyedSubscription)
 
+  toggleMessage: (messagePrepend, enabled) ->
+    "Rubocop Auto Correct: "+ messagePrepend + " " +
+      (if enabled then "ON" else "OFF")
+
   toggleAutoRun: ->
-    if atom.config.get('rubocop-auto-correct.autoRun')
-      atom.config.set('rubocop-auto-correct.autoRun', false)
-      atom.notifications.addSuccess("Turn OFF, Auto Run")
-    else
-      atom.config.set('rubocop-auto-correct.autoRun', true)
-      atom.notifications.addSuccess("Turn ON, Auto Run")
+    setting = atom.config.get('rubocop-auto-correct.autoRun')
+    atom.config.set('rubocop-auto-correct.autoRun', !setting)
+    atom.notifications.addSuccess(@toggleMessage("Auto Run", !setting))
 
   toggleNotification: ->
-    if atom.config.get('rubocop-auto-correct.notification')
-      atom.config.set('rubocop-auto-correct.notification', false)
-      atom.notifications.addSuccess("Turn OFF, Notification")
-    else
-      atom.config.set('rubocop-auto-correct.notification', true)
-      atom.notifications.addSuccess("Turn ON, Notification")
+    setting = atom.config.get('rubocop-auto-correct.notification')
+    atom.config.set('rubocop-auto-correct.notification', !setting)
+    atom.notifications.addSuccess(@toggleMessage("Notifications", !setting))
 
   toggleCorrectFile: ->
-    if atom.config.get('rubocop-auto-correct.correctFile')
-      atom.config.set('rubocop-auto-correct.correctFile', false)
-      atom.notifications.addSuccess("Correct the buffer")
-    else
-      atom.config.set('rubocop-auto-correct.correctFile', true)
-      atom.notifications.addSuccess("Correct the file")
+    setting = atom.config.get('rubocop-auto-correct.correctFile')
+    atom.config.set('rubocop-auto-correct.correctFile', !setting)
+    atom.notifications.addSuccess(@toggleMessage("Correct File", !setting))
 
   toggleDebugMode: ->
-    if atom.config.get('rubocop-auto-correct.debugMode')
-      atom.config.set('rubocop-auto-correct.debugMode', false)
-      atom.notifications.addSuccess("Turn OFF, Debug Mode")
-    else
-      atom.config.set('rubocop-auto-correct.debugMode', true)
-      atom.notifications.addSuccess("Turn ON, Debug Mode")
+    setting = atom.config.get('rubocop-auto-correct.debugMode')
+    atom.config.set('rubocop-auto-correct.debugMode', !setting)
+    atom.notifications.addSuccess(@toggleMessage("Debug Mode", !setting))
 
   run: (editor) ->
-    unless editor.getGrammar().scopeName.match("ruby")
-      return atom.notifications.addError("Only use source.ruby")
-    if atom.config.get('rubocop-auto-correct.correctFile')
-      if editor.isModified()
-        editor.save()
-      @autoCorrectFile(editor.getPath())
-    else
-      @autoCorrectBuffer(editor.getBuffer())
+    if editor
+      unless editor.getGrammar().scopeName.match("ruby")
+        return atom.notifications.addError("Only use source.ruby")
+      if atom.config.get('rubocop-auto-correct.correctFile')
+        if editor.isModified()
+          editor.save()
+        @autoCorrectFile(editor)
+      else
+        @autoCorrectBuffer(editor)
 
-  projectRootRubocopConfig: (filePath) ->
+  rubocopConfigPath: (filePath) ->
+    configFile = '/.rubocop.yml'
     [projectPath, relativePath] = atom.project.relativizePath(filePath)
-    rubocopConfigPath = projectPath+'/.rubocop.yml'
-    if (fs.existsSync(rubocopConfigPath))
-      ['--config', rubocopConfigPath]
+    projectConfigPath = projectPath + configFile
+    homeConfigPath = fs.getHomeDirectory() + configFile
+    if (fs.existsSync(projectConfigPath))
+      ['--config', projectConfigPath]
+    else if (fs.existsSync(homeConfigPath))
+      ['--config', homeConfigPath]
     else
       []
 
-  autoCorrectBuffer: (buffer)  ->
+  rubocopCommand: ->
+    commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+                                .concat(" --format json")
+                                .replace(/--format\s[^(\sj)]+/, "")
+                                .split(/\s+/).filter((i) -> i)
+    [commandWithArgs[0], commandWithArgs[1..]]
+
+  autoCorrectBuffer: (editor)  ->
+    buffer = editor.getBuffer()
+
     tempFilePath = @makeTempFile("rubocop.rb")
     fs.writeFileSync(tempFilePath, buffer.getText())
-    commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-                                .split(/\s+/).filter((i) -> i)
-                                .concat(['-a', tempFilePath])
-                                .concat(@projectRootRubocopConfig(buffer.getPath()))
-    command = commandWithArgs[0]
-    args = commandWithArgs[1..]
-    options = { encoding: 'utf-8', timeout: 5000 }
-    notification = atom.config.get('rubocop-auto-correct.notification')
-    debug = atom.config.get('rubocop-auto-correct.debugMode')
 
-    which command, (err) ->
+    rubocopCommand = @rubocopCommand()
+    command = rubocopCommand[0]
+    args = rubocopCommand[1]
+      .concat(['-a', tempFilePath])
+      .concat(@rubocopConfigPath(buffer.getPath()))
+
+    which command, (err) =>
       if (err)
-        return atom.notifications.addFatalError(
-          "Rubocop command is not found.",
-          { detail: '''
-          When you don't install rubocop yet, Run `gem install rubocop` first.\n
-          If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
-          ''' }
-        )
+        @rubocopNotFoundError()
+      else
+        rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
+        if (rubocop.stderr)
+          @rubocopOutput({"stderr": "#{rubocop.stderr}"})
+        else
+          buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
+          @rubocopOutput(JSON.parse(rubocop.stdout))
 
-      rubocop = spawnSync(command, args, options)
+  autoCorrectFile: (editor)  ->
+    filePath = editor.getPath()
+    buffer = editor.getBuffer();
 
-      if rubocop.stderr != ""
-        console.error(rubocop.stderr) if debug
-        atom.notifications.addError(rubocop.stderr) if notification
+    rubocopCommand = @rubocopCommand()
+    command = rubocopCommand[0]
+    args = rubocopCommand[1]
+      .concat(['-a', filePath])
+      .concat(@rubocopConfigPath(filePath))
 
-      if rubocop.stdout.match("corrected")
-        buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-        if notification || debug
-          re = /^.+?(:[0-9]+:[0-9]+:.*$)/mg
-          offenses = rubocop.stdout.match(re)
-          offenses.map (offense) ->
-            message = offense.replace(re, buffer.getBaseName() + "$1")
-            console.log(message) if debug
-            atom.notifications.addSuccess(message) if notification
+    stdout = (output) =>
+      @rubocopOutput(JSON.parse(output))
+      buffer.reload()
+    stderr = (output) =>
+      @rubocopOutput({"stderr": "#{output}"})
 
-  autoCorrectFile: (filePath)  ->
-    commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
-                                .split(/\s+/).filter((i) -> i)
-                                .concat(['-a', filePath])
-                                .concat(@projectRootRubocopConfig(filePath))
-    command = commandWithArgs[0]
-    args = commandWithArgs[1..]
+    which command, (err) =>
+      if (err)
+        @rubocopNotFoundError()
+      else
+        new BufferedProcess({command, args, stdout, stderr})
+
+  rubocopNotFoundError: ->
+    atom.notifications.addError(
+      "Rubocop command is not found.",
+      { detail: '''
+      When you don't install rubocop yet, Run `gem install rubocop` first.\n
+      If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+      ''' }
+    )
+
+  rubocopOutput: (data) =>
     debug = atom.config.get('rubocop-auto-correct.debugMode')
     notification = atom.config.get('rubocop-auto-correct.notification')
-    stdout = (output) ->
-      if output.match("corrected")
-        console.log(output) if debug
-        atom.notifications.addSuccess(output) if notification
-    stderr = (output) ->
-      console.error(output) if debug
-      atom.notifications.addError(output) if notification
 
-    which command, (err) ->
-      if (err)
-        return atom.notifications.addFatalError(
-          "Rubocop command is not found.",
-          { detail: '''
-          When you don't install rubocop yet, Run `gem install rubocop` first.\n
-          If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
-          ''' }
-        )
+    console.log(data) if debug
 
-      rubocop = new BufferedProcess({command, args, stdout, stderr})
-
+    if (data.stderr)
+      atom.notifications.addError(data.stderr) if notification
+    else if (data.summary.offense_count == 0)
+      atom.notifications.addSuccess("No offenses found") if notification
+    else
+      atom.notifications.addWarning("#{data.summary.offense_count} offenses found!") if notification
+      for file in data.files
+        for offense in file.offenses
+          if offense.corrected
+            atom.notifications.addSuccess(
+              "Line: #{offense.location.line}, Col:#{offense.location.column} (FIXED)",
+              { detail: "#{offense.message}" }
+            ) if notification
+          else
+            atom.notifications.addWarning(
+              "Line: #{offense.location.line}, Col:#{offense.location.column}",
+              { detail: "#{offense.message}" }
+            ) if notification
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()

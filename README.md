@@ -40,6 +40,8 @@ If you want to use the commands from keybinding, please set up `~/.atom/keymap.c
 
 ![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/12009029/a5a30586-aca1-11e5-9bf8-883418341057.png)
 
+If you have a custom `.rubocop.yml`, this package will search it on project's root folder or on `$HOME/.rubocop.yml`
+
 ### Auto Run
 
 This package supports auto-run. When checked, it runs Rubocop auto correct. But, **it does not run automatically unless you activate this package**.
