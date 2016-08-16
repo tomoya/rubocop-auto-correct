@@ -68,9 +68,9 @@ class RubocopAutoCorrect
       if atom.config.get('rubocop-auto-correct.correctFile')
         if editor.isModified()
           editor.save()
-        @autoCorrectFile(editor.getPath())
+        @autoCorrectFile(editor)
       else
-        @autoCorrectBuffer(editor.getBuffer())
+        @autoCorrectBuffer(editor)
 
   rubocopConfigPath: (filePath) ->
     configFile = '/.rubocop.yml'
@@ -86,11 +86,14 @@ class RubocopAutoCorrect
 
   rubocopCommand: ->
     commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
+                                .concat(" --format json")
+                                .replace(/--format\s[^(\sj)]+/, "")
                                 .split(/\s+/).filter((i) -> i)
-                                .concat(["--format", "json"])
     [commandWithArgs[0], commandWithArgs[1..]]
 
-  autoCorrectBuffer: (buffer)  ->
+  autoCorrectBuffer: (editor)  ->
+    buffer = editor.getBuffer()
+
     tempFilePath = @makeTempFile("rubocop.rb")
     fs.writeFileSync(tempFilePath, buffer.getText())
 
@@ -111,7 +114,10 @@ class RubocopAutoCorrect
           buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
           @rubocopOutput(JSON.parse(rubocop.stdout))
 
-  autoCorrectFile: (filePath)  ->
+  autoCorrectFile: (editor)  ->
+    filePath = editor.getPath()
+    buffer = editor.getBuffer();
+
     rubocopCommand = @rubocopCommand()
     command = rubocopCommand[0]
     args = rubocopCommand[1]
@@ -120,6 +126,7 @@ class RubocopAutoCorrect
 
     stdout = (output) =>
       @rubocopOutput(JSON.parse(output))
+      buffer.reload()
     stderr = (output) =>
       @rubocopOutput({"stderr": "#{output}"})
 
