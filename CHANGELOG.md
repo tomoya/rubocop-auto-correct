@@ -1,3 +1,10 @@
+## v1.3.0 (2016-07-21)
+
+Features:
+
+- Search `.rubocop.yml` on project root automatically. (#30)
+  - Thanks @rfocosi
+
 ## v1.2.0 (2016-01-20)
 
 Features:
