@@ -30,8 +30,7 @@ class RubocopAutoCorrect
     buffer = editor.getBuffer()
     bufferSavedSubscription = buffer.onDidSave =>
       buffer.transact =>
-        if atom.config.get('rubocop-auto-correct.autoRun')
-          @run(editor)
+        @run(editor) if atom.config.get('rubocop-auto-correct.autoRun')
 
     editorDestroyedSubscription = editor.onDidDestroy ->
       bufferSavedSubscription.dispose()
@@ -72,27 +71,23 @@ class RubocopAutoCorrect
     atom.notifications.addSuccess(@toggleMessage("Debug Mode", !setting))
 
   run: (editor) ->
-    if editor
-      unless editor.getGrammar().scopeName.match("ruby")
-        return atom.notifications.addError("Only use source.ruby")
-      if atom.config.get('rubocop-auto-correct.correctFile')
-        if editor.isModified()
-          editor.save()
-        @autoCorrectFile(editor)
-      else
-        @autoCorrectBuffer(editor)
+    return if !editor
+    unless editor.getGrammar().scopeName.match("ruby")
+      return atom.notifications.addError("Only use source.ruby")
+    if atom.config.get('rubocop-auto-correct.correctFile')
+      editor.save() if editor.isModified()
+      @autoCorrectFile(editor)
+    else
+      @autoCorrectBuffer(editor)
 
   rubocopConfigPath: (filePath) ->
     configFile = '/.rubocop.yml'
     [projectPath, relativePath] = atom.project.relativizePath(filePath)
     projectConfigPath = projectPath + configFile
     homeConfigPath = fs.getHomeDirectory() + configFile
-    if (fs.existsSync(projectConfigPath))
-      ['--config', projectConfigPath]
-    else if (fs.existsSync(homeConfigPath))
-      ['--config', homeConfigPath]
-    else
-      []
+    return ['--config', projectConfigPath] if (fs.existsSync(projectConfigPath))
+    retrun ['--config', homeConfigPath] if (fs.existsSync(homeConfigPath))
+    []
 
   rubocopCommand: ->
     commandWithArgs = atom.config.get('rubocop-auto-correct.rubocopCommandPath')
@@ -114,15 +109,11 @@ class RubocopAutoCorrect
       .concat(@rubocopConfigPath(buffer.getPath()))
 
     which command, (err) =>
-      if (err)
-        @rubocopNotFoundError()
-      else
-        rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
-        if (rubocop.stderr)
-          @rubocopOutput({"stderr": "#{rubocop.stderr}"})
-        else
-          buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
-          @rubocopOutput(JSON.parse(rubocop.stdout))
+      return @rubocopNotFoundError() if (err)
+      rubocop = spawnSync(command, args, { encoding: 'utf-8', timeout: 5000 })
+      return @rubocopOutput({"stderr": "#{rubocop.stderr}"}) if (rubocop.stderr)
+      buffer.setTextViaDiff(fs.readFileSync(tempFilePath, 'utf-8'))
+      @rubocopOutput(JSON.parse(rubocop.stdout))
 
   autoCorrectFile: (editor)  ->
     filePath = editor.getPath()
@@ -141,10 +132,8 @@ class RubocopAutoCorrect
       @rubocopOutput({"stderr": "#{output}"})
 
     which command, (err) =>
-      if (err)
-        @rubocopNotFoundError()
-      else
-        new BufferedProcess({command, args, stdout, stderr})
+      return @rubocopNotFoundError() if (err)
+      new BufferedProcess({command, args, stdout, stderr})
 
   rubocopNotFoundError: ->
     atom.notifications.addError(
@@ -166,29 +155,33 @@ class RubocopAutoCorrect
 
     if (data.stderr)
       atom.notifications.addError(data.stderr) if notification
-    else if (data.summary.offense_count == 0)
+      return
+
+    if (data.summary.offense_count == 0)
       if !onlyFixesNotification
         atom.notifications.addSuccess("No offenses found") if notification
-    else
-      if !onlyFixesNotification
-        atom.notifications.addWarning(
-          "#{data.summary.offense_count} offenses found!"
-        ) if notification
-      for file in data.files
-        for offense in file.offenses
-          if offense.corrected
-            atom.notifications.addSuccess(
+      return
+
+    if !onlyFixesNotification
+      atom.notifications.addWarning(
+        "#{data.summary.offense_count} offenses found!"
+      ) if notification
+
+    for file in data.files
+      for offense in file.offenses
+        if offense.corrected
+          atom.notifications.addSuccess(
+            "Line: #{offense.location.line},
+            Col:#{offense.location.column} (FIXED)",
+            { detail: "#{offense.message}" }
+          ) if notification
+        else
+          if !onlyFixesNotification
+            atom.notifications.addWarning(
               "Line: #{offense.location.line},
-              Col:#{offense.location.column} (FIXED)",
+              Col:#{offense.location.column}",
               { detail: "#{offense.message}" }
             ) if notification
-          else
-            if !onlyFixesNotification
-              atom.notifications.addWarning(
-                "Line: #{offense.location.line},
-                Col:#{offense.location.column}",
-                { detail: "#{offense.message}" }
-              ) if notification
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
