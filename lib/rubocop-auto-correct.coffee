@@ -14,10 +14,12 @@ class RubocopAutoCorrect
         @handleEvents(editor)
 
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'rubocop-auto-correct:current-file': => @run(atom.workspace.getActiveTextEditor())
+      'rubocop-auto-correct:current-file': =>
+        @run(atom.workspace.getActiveTextEditor())
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
-      'rubocop-auto-correct:toggle-only-fixes-notification': => @toggleOnlyFixesNotification()
+      'rubocop-auto-correct:toggle-only-fixes-notification': =>
+        @toggleOnlyFixesNotification()
       'rubocop-auto-correct:toggle-correct-file': => @toggleCorrectFile()
       'rubocop-auto-correct:toggle-debug-mode': => @toggleDebugMode()
 
@@ -55,7 +57,9 @@ class RubocopAutoCorrect
   toggleOnlyFixesNotification: ->
     setting = atom.config.get('rubocop-auto-correct.onlyFixesNotification')
     atom.config.set('rubocop-auto-correct.onlyFixesNotification', !setting)
-    atom.notifications.addSuccess(@toggleMessage("Only fixes notification", !setting))
+    atom.notifications.addSuccess(
+      @toggleMessage("Only fixes notification", !setting)
+    )
 
   toggleCorrectFile: ->
     setting = atom.config.get('rubocop-auto-correct.correctFile')
@@ -147,7 +151,8 @@ class RubocopAutoCorrect
       "Rubocop command is not found.",
       { detail: '''
       When you don't install rubocop yet, Run `gem install rubocop` first.\n
-      If you already installed rubocop, Please check package setting at `Rubocop Command Path`.
+      If you already installed rubocop,
+      Please check package setting at `Rubocop Command Path`.
       ''' }
     )
 
@@ -173,13 +178,15 @@ class RubocopAutoCorrect
         for offense in file.offenses
           if offense.corrected
             atom.notifications.addSuccess(
-              "Line: #{offense.location.line}, Col:#{offense.location.column} (FIXED)",
+              "Line: #{offense.location.line},
+              Col:#{offense.location.column} (FIXED)",
               { detail: "#{offense.message}" }
             ) if notification
           else
             if !onlyFixesNotification
               atom.notifications.addWarning(
-                "Line: #{offense.location.line}, Col:#{offense.location.column}",
+                "Line: #{offense.location.line},
+                Col:#{offense.location.column}",
                 { detail: "#{offense.message}" }
               ) if notification
 
