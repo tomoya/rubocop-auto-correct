@@ -1,3 +1,9 @@
+## v1.4.1 (2016-08-17)
+
+Features:
+
+- Move config to package.json
+
 ## v1.4.0 (2016-08-16)
 
 Features:
