@@ -121,7 +121,7 @@ class RubocopAutoCorrect
 
   autoCorrectFile: (editor)  ->
     filePath = editor.getPath()
-    buffer = editor.getBuffer();
+    buffer = editor.getBuffer()
 
     rubocopCommand = @rubocopCommand()
     command = rubocopCommand[0]
