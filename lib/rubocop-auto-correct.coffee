@@ -153,15 +153,21 @@ class RubocopAutoCorrect
   rubocopOutput: (data) =>
     debug = atom.config.get('rubocop-auto-correct.debugMode')
     notification = atom.config.get('rubocop-auto-correct.notification')
+    onlyFixesNotification =
+      atom.config.get('rubocop-auto-correct.onlyFixesNotification')
 
     console.log(data) if debug
 
     if (data.stderr)
       atom.notifications.addError(data.stderr) if notification
     else if (data.summary.offense_count == 0)
-      atom.notifications.addSuccess("No offenses found") if notification
+      if !onlyFixesNotification
+        atom.notifications.addSuccess("No offenses found") if notification
     else
-      atom.notifications.addWarning("#{data.summary.offense_count} offenses found!") if notification
+      if !onlyFixesNotification
+        atom.notifications.addWarning(
+          "#{data.summary.offense_count} offenses found!"
+        ) if notification
       for file in data.files
         for offense in file.offenses
           if offense.corrected
@@ -170,10 +176,11 @@ class RubocopAutoCorrect
               { detail: "#{offense.message}" }
             ) if notification
           else
-            atom.notifications.addWarning(
-              "Line: #{offense.location.line}, Col:#{offense.location.column}",
-              { detail: "#{offense.message}" }
-            ) if notification
+            if !onlyFixesNotification
+              atom.notifications.addWarning(
+                "Line: #{offense.location.line}, Col:#{offense.location.column}",
+                { detail: "#{offense.message}" }
+              ) if notification
 
   makeTempFile: (filename) ->
     directory = temp.mkdirSync()
