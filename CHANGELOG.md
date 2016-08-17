@@ -1,15 +1,23 @@
+## v1.5.0 (2016-08-17)
+
+Features:
+
+- Improve notifications (#35)
+  - Add onlyFixesNotification option to config
+  - Show only notification for fixing if onlyFixesNotification option was enabled
+
 ## v1.4.1 (2016-08-17)
 
 Features:
 
-- Move config to package.json
+- Move config to package.json (#34)
 
 ## v1.4.0 (2016-08-16)
 
 Features:
 
 - Improve notifications (#31)
-- Search `.rubocop.yml` from home directory
+- Search `.rubocop.yml` from home directory (#31)
   - If you have project config, it will be used preferentially.
 
 ## v1.3.0 (2016-07-21)
