@@ -142,6 +142,13 @@ describe "RubocopAutoCorrect", ->
       @rubocopAutoCorrect.toggleNotification()
       expect(atom.config.get('rubocop-auto-correct').notification).toBe false
 
+    it "changes notification", ->
+      atom.config.set('rubocop-auto-correct.onlyFixesNotification', false)
+      @rubocopAutoCorrect.toggleOnlyFixesNotification()
+      expect(atom.config.get('rubocop-auto-correct').onlyFixesNotification).toBe true
+      @rubocopAutoCorrect.toggleOnlyFixesNotification()
+      expect(atom.config.get('rubocop-auto-correct').onlyFixesNotification).toBe false
+
     it "changes correct method", ->
       atom.config.set('rubocop-auto-correct.correctFile', false)
       @rubocopAutoCorrect.toggleCorrectFile()

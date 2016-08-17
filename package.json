@@ -40,14 +40,20 @@
       "type": "boolean",
       "default": true
     },
-    "correctFile": {
+    "onlyFixesNotification": {
       "order": 4,
+      "description": "When this option is disabled, you will get all rubocop notifications appeared.",
+      "type": "boolean",
+      "default": true
+    },
+    "correctFile": {
+      "order": 5,
       "description": "You can correct a file directly if you enable this option. You do not need to save file after correcting it.",
       "type": "boolean",
       "default": false
     },
     "debugMode": {
-      "order": 5,
+      "order": 6,
       "description": "You can get log on console panel if you enable this option.",
       "type": "boolean",
       "default": false

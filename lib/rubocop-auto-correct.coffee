@@ -51,6 +51,11 @@ class RubocopAutoCorrect
     atom.config.set('rubocop-auto-correct.notification', !setting)
     atom.notifications.addSuccess(@toggleMessage("Notifications", !setting))
 
+  toggleOnlyFixesNotification: ->
+    setting = atom.config.get('rubocop-auto-correct.onlyFixesNotification')
+    atom.config.set('rubocop-auto-correct.onlyFixesNotification', !setting)
+    atom.notifications.addSuccess(@toggleMessage("Only fixes notification", !setting))
+
   toggleCorrectFile: ->
     setting = atom.config.get('rubocop-auto-correct.correctFile')
     atom.config.set('rubocop-auto-correct.correctFile', !setting)
