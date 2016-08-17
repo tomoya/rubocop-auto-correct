@@ -1,7 +1,7 @@
 {
   "name": "rubocop-auto-correct",
   "main": "./lib/main",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Auto-correct ruby source code by using rubocop in Atom",
   "activationCommands": {
     "atom-workspace": "rubocop-auto-correct:current-file"
