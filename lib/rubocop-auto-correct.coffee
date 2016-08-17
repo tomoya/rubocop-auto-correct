@@ -150,7 +150,7 @@ class RubocopAutoCorrect
       ''' }
     )
 
-  rubocopOutput: (data) =>
+  rubocopOutput: (data) ->
     debug = atom.config.get('rubocop-auto-correct.debugMode')
     notification = atom.config.get('rubocop-auto-correct.notification')
     onlyFixesNotification =
