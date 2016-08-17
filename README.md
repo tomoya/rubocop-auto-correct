@@ -22,6 +22,7 @@ You have [rubocop](https://github.com/bbatsov/rubocop) installed.
 | ---- | ----------- |
 | `RUbocop Auto Correct: Current File` | Run rubocop auto-correct to current file |
 | `RUbocop Auto Correct: Toggle Notification` | Toggle notification option |
+| `RUbocop Auto Correct: Toggle Only Fixed Notification` | Toggle only fixes notification option |
 | `RUbocop Auto Correct: Toggle Auto Run` | Toggle auto run option |
 | `RUbocop Auto Correct: Toggle Debug Mode` | Toggle debug-mode option |
 
@@ -38,7 +39,7 @@ If you want to use the commands from keybinding, please set up `~/.atom/keymap.c
 
 ## Settings
 
-![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/12009029/a5a30586-aca1-11e5-9bf8-883418341057.png)
+![rubocop-auto-correct setting panel](https://cloud.githubusercontent.com/assets/18009/17727348/aa08a8d8-6493-11e6-9a14-7efc28d17315.png)
 
 If you have a custom `.rubocop.yml`, this package will search it on project's root folder or on `$HOME/.rubocop.yml`
 
@@ -67,6 +68,14 @@ When this option is disabled, you do not receive any notifications even thought 
 - default value is `true`
 
 You can enable/disable this option by `Rubocop Auto Correct: Toggle Notification` command at any time.
+
+### Only Fixes Notification
+
+When this option is disabled, you will get all rubocop notifications appeared.
+
+- default value is `true`
+
+You can enable/disable this option by `Rubocop Auto Correct: Toggle Only Fixes Notification` command at any time.
 
 ### Rubocop Command Path
 
