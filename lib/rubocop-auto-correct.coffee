@@ -17,6 +17,7 @@ class RubocopAutoCorrect
       'rubocop-auto-correct:current-file': => @run(atom.workspace.getActiveTextEditor())
       'rubocop-auto-correct:toggle-auto-run': => @toggleAutoRun()
       'rubocop-auto-correct:toggle-notification': => @toggleNotification()
+      'rubocop-auto-correct:toggle-only-fixes-notification': => @toggleOnlyFixesNotification()
       'rubocop-auto-correct:toggle-correct-file': => @toggleCorrectFile()
       'rubocop-auto-correct:toggle-debug-mode': => @toggleDebugMode()
 
