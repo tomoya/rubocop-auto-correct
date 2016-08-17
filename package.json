@@ -20,5 +20,37 @@
     "which": "^1.1.1",
     "temp": "^0.8.3",
     "fs-plus": "2.x"
+  },
+  "configSchema": {
+    "rubocopCommandPath": {
+      "order": 1,
+      "description": "If the command does not work, please input rubocop full path here. Example: /Users/<username>/.rbenv/shims/rubocop)",
+      "type": "string",
+      "default": "rubocop"
+    },
+    "autoRun": {
+      "order": 2,
+      "description": "When you save the buffer, automatically it runs Rubocop auto correct. You need to run manually once at window before you use the option.",
+      "type": "boolean",
+      "default": false
+    },
+    "notification": {
+      "order": 3,
+      "description": "When this option is disabled, you do not receive any notifications even thought a file is corrected.",
+      "type": "boolean",
+      "default": true
+    },
+    "correctFile": {
+      "order": 4,
+      "description": "You can correct a file directly if you enable this option. You do not need to save file after correcting it.",
+      "type": "boolean",
+      "default": false
+    },
+    "debugMode": {
+      "order": 5,
+      "description": "You can get log on console panel if you enable this option.",
+      "type": "boolean",
+      "default": false
+    }
   }
 }
