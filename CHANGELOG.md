@@ -1,3 +1,10 @@
+## v1.5.1 (2016-08-19)
+
+Features:
+
+- Fix to return home config path (#37)
+  - Thanks @imnotquitejack
+
 ## v1.5.0 (2016-08-17)
 
 Features:
