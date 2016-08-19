@@ -86,7 +86,7 @@ class RubocopAutoCorrect
     projectConfigPath = projectPath + configFile
     homeConfigPath = fs.getHomeDirectory() + configFile
     return ['--config', projectConfigPath] if (fs.existsSync(projectConfigPath))
-    retrun ['--config', homeConfigPath] if (fs.existsSync(homeConfigPath))
+    return ['--config', homeConfigPath] if (fs.existsSync(homeConfigPath))
     []
 
   rubocopCommand: ->
